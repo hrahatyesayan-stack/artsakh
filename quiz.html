@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<!--
+  ════════════════════════════════════════════════════════════════
+   ДОРОГА СКВОЗЬ ВЕКА — викторина по истории Арцаха
+   Игра: путешествуй по 7 эпохам Арцаха и отвечай на вопросы.
+   Верный ответ — очки и шаг вперёд во времени. Ошибка — минус жизнь.
+
+   КАК ИГРАТЬ:  дважды кликни по файлу — откроется в браузере.
+   УПРАВЛЕНИЕ:  мышь/тап по ответу; или клавиши 1–4; Enter — дальше.
+
+   ── ХОЧЕШЬ ДОБАВИТЬ ВОПРОСЫ ИЛИ ПОМЕНЯТЬ? ──
+   Все вопросы лежат ниже в списке ERAS. У каждого: q — вопрос,
+   a — варианты, correct — номер верного (с 0), fact — факт после ответа.
+  ════════════════════════════════════════════════════════════════
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏔️%3C/text%3E%3C/svg%3E" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Дорога сквозь века · Арцах</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; background:#05060c; color:#fff;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    -webkit-font-smoothing:antialiased; user-select:none; -webkit-tap-highlight-color:transparent;
+    overscroll-behavior:none; }
+  .hidden { display:none !important; }
+
+  #bg { position:fixed; inset:0; z-index:0; transition:background 1.1s ease; }
+  .mountain { position:fixed; left:-5%; width:110%; bottom:0; z-index:1; transition:background 1.1s ease; }
+  .m-far  { height:42%; clip-path:polygon(0 100%,0 55%,12% 30%,24% 52%,38% 18%,52% 46%,63% 22%,76% 50%,88% 28%,100% 52%,100% 100%); }
+  .m-near { height:30%; clip-path:polygon(0 100%,0 70%,15% 40%,30% 66%,45% 34%,60% 62%,74% 38%,87% 64%,100% 44%,100% 100%); }
+  #particles { position:fixed; inset:0; z-index:2; pointer-events:none; }
+
+  /* HUD */
+  #hud { position:fixed; top:0; left:0; right:0; z-index:5; display:flex;
+    justify-content:space-between; align-items:center; gap:12px;
+    padding:15px 22px; pointer-events:none; text-shadow:0 2px 12px rgba(0,0,0,.55); }
+  .eralbl { font-size:clamp(12px,1.7vw,15px); letter-spacing:.14em; opacity:.9; }
+  .eralbl .num { opacity:.55; }
+  #hearts { font-size:clamp(20px,3vw,26px); color:#ff6b6b; letter-spacing:5px; }
+  #hearts .lost { color:rgba(255,255,255,.22); }
+  .score { font-size:clamp(11px,1.6vw,13px); letter-spacing:.2em; text-transform:uppercase; opacity:.7; text-align:right; }
+  .score b { display:block; color:#f2c879; font-size:clamp(20px,3vw,26px); letter-spacing:0; }
+
+  /* Карточка вопроса */
+  .card { position:fixed; z-index:6; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(680px,92vw); background:rgba(13,15,28,.74);
+    backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px);
+    border:1px solid rgba(255,255,255,.13); border-radius:22px;
+    padding:30px clamp(20px,4vw,34px) 26px; box-shadow:0 30px 90px rgba(0,0,0,.55);
+    animation:rise .5s ease; }
+  @keyframes rise { from{opacity:0; transform:translate(-50%,-46%);} to{opacity:1; transform:translate(-50%,-50%);} }
+  .qtext { font-size:clamp(19px,3vw,27px); line-height:1.38; margin-bottom:22px; }
+
+  .ans { display:flex; align-items:center; width:100%; text-align:left; margin:10px 0;
+    padding:15px 18px; font-family:inherit; font-size:clamp(15px,2.1vw,19px); color:#fff;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.16);
+    border-radius:14px; cursor:pointer; transition:.15s; }
+  .ans:hover:not(:disabled) { background:rgba(255,255,255,.15); border-color:rgba(242,200,121,.6); transform:translateY(-1px); }
+  .ans:disabled { cursor:default; }
+  .ans .key { display:inline-flex; align-items:center; justify-content:center; flex:none;
+    width:26px; height:26px; margin-right:13px; border-radius:7px;
+    background:rgba(255,255,255,.12); font-size:14px; opacity:.85; }
+  .ans.correct { background:rgba(58,160,84,.9); border-color:#7fe39a; }
+  .ans.wrong   { background:rgba(196,46,57,.85); border-color:#ff8f8f; }
+  .ans.correct .key, .ans.wrong .key { background:rgba(255,255,255,.25); opacity:1; }
+
+  .feedback { margin-top:18px; border-top:1px solid rgba(255,255,255,.12); padding-top:15px; }
+  #fmark { font-size:clamp(16px,2.3vw,20px); font-weight:600; margin-bottom:8px; }
+  #fmark.ok { color:#7fe39a; } #fmark.no { color:#ff8f8f; }
+  #ffact { opacity:.86; font-size:clamp(14px,1.95vw,17px); line-height:1.62; }
+
+  .btn { font-family:inherit; font-size:clamp(14px,1.8vw,17px); letter-spacing:.14em;
+    text-transform:uppercase; color:#f2c879; background:transparent;
+    border:1px solid rgba(242,200,121,.7); padding:13px 30px; border-radius:40px;
+    cursor:pointer; transition:.2s; }
+  .btn:hover { background:rgba(242,200,121,.15); box-shadow:0 0 26px rgba(242,200,121,.28); }
+  .feedback .btn { margin-top:16px; }
+
+  /* Полноэкранные экраны */
+  .screen { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:7vw;
+    background:radial-gradient(120% 90% at 50% 40%, rgba(10,12,28,.28), rgba(7,8,16,.72)); }
+  .am  { font-size:clamp(14px,2vw,20px); letter-spacing:.3em; opacity:.72; margin-bottom:12px; }
+  .epoch { font-size:clamp(12px,1.7vw,15px); letter-spacing:.34em; text-transform:uppercase; opacity:.62; margin-bottom:14px; }
+  h1 { font-size:clamp(32px,7vw,72px); font-weight:500; letter-spacing:.02em; line-height:1.04; text-shadow:0 4px 50px rgba(0,0,0,.6); }
+  h2 { font-size:clamp(28px,5.5vw,56px); font-weight:500; line-height:1.05; }
+  .desc { font-size:clamp(15px,2.1vw,20px); opacity:.9; margin-top:18px; max-width:560px; line-height:1.6; }
+  .big  { font-size:clamp(52px,12vw,116px); color:#f2c879; line-height:1; margin:6px 0; text-shadow:0 4px 40px rgba(242,200,121,.25); }
+  .screen .btn { margin-top:30px; animation:glow 2.4s ease-in-out infinite; }
+  @keyframes glow { 0%,100%{box-shadow:0 0 0 rgba(242,200,121,0);opacity:.85} 50%{box-shadow:0 0 26px rgba(242,200,121,.4);opacity:1} }
+  .small { margin-top:16px; font-size:13px; letter-spacing:.08em; opacity:.55; }
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;left:14px;bottom:12px;z-index:9999;font-family:Georgia,serif;font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.22);text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">← Արցախ</a>
+<div id="bg"></div>
+<div class="mountain m-far" id="mfar"></div>
+<div class="mountain m-near" id="mnear"></div>
+<canvas id="particles"></canvas>
+
+<div id="hud" class="hidden">
+  <div class="eralbl"><span id="eraName">—</span> <span class="num">· эпоха <span id="eraNum">1</span>/7</span></div>
+  <div id="hearts">♥♥♥</div>
+  <div class="score">Очки<b id="score">0</b></div>
+</div>
+
+<!-- Карточка вопроса -->
+<div class="card hidden" id="questionCard">
+  <div class="qtext" id="qtext"></div>
+  <div id="answers"></div>
+  <div class="feedback hidden" id="feedback">
+    <div id="fmark"></div>
+    <div id="ffact"></div>
+    <button class="btn" id="nextBtn">Дальше →</button>
+  </div>
+</div>
+
+<!-- Старт -->
+<div class="screen" id="startScreen">
+  <div class="am">Արցախ · Մենք ենք մեր սարերը</div>
+  <h1>Дорога сквозь века</h1>
+  <div class="desc">Викторина по истории Арцаха. Пройди 7 эпох — от первого имени в камне до наших дней. Отвечай верно, береги 3 жизни.</div>
+  <button class="btn" id="startBtn">Начать путь</button>
+  <div class="small">Ответ — мышь/тап или клавиши 1–4 · Enter — дальше</div>
+</div>
+
+<!-- Заставка эпохи -->
+<div class="screen hidden" id="eraIntro">
+  <div class="epoch" id="introEpoch"></div>
+  <div class="am" id="introAm"></div>
+  <h2 id="introName"></h2>
+  <div class="desc" id="introText"></div>
+  <button class="btn" id="introBtn">В путь →</button>
+</div>
+
+<!-- Поражение -->
+<div class="screen hidden" id="overScreen">
+  <div class="epoch">Путь прерван</div>
+  <div class="big" id="overScore">0</div>
+  <div class="desc" id="overLine"></div>
+  <div class="small" id="overBest"></div>
+  <button class="btn" id="overBtn">Пройти заново</button>
+</div>
+
+<!-- Победа -->
+<div class="screen hidden" id="winScreen">
+  <div class="am">Մենք ենք մեր սարերը 🇦🇲</div>
+  <h2>Ты прошёл всю историю Арцаха!</h2>
+  <div class="big" id="winScore">0</div>
+  <div class="desc" id="winLine"></div>
+  <div class="small" id="winBest"></div>
+  <button class="btn" id="winBtn">Пройти заново</button>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+
+/* ════════════ КОНТЕНТ: ЭПОХИ И ВОПРОСЫ (история — настоящая) ════════════ */
+const ERAS = [
+  { name:'Древность', am:'Ուրտեխինի', epoch:'763 г. до н.э.', mode:'embers',
+    intro:'Первое имя этой земли, высеченное в камне.',
+    sky:'linear-gradient(180deg,#16204a 0%,#3b3d6e 45%,#e2a24c 100%)', mfar:'#2c3a64', mnear:'#141f3c',
+    questions:[
+      { q:'Как впервые назвали эту землю в надписи урартского царя Сардури II?', a:['Уртехини','Тигранакерт','Двин','Ани'], correct:0,
+        fact:'В VIII в. до н.э. царь Урарту Сардури II высек имя «Уртехини» — от него и происходит название Арцах.' },
+      { q:'Какой древнегреческий географ назвал Арцах краем «с наибольшим числом всадников»?', a:['Страбон','Геродот','Птолемей','Плутарх'], correct:0,
+        fact:'Страбон описывал Арцах (Орхистену) как землю Армении с самым большим конным войском.' },
+      { q:'Какой по счёту провинцией Великой Армении был Арцах?', a:['Десятой','Первой','Пятой','Пятнадцатой'], correct:0,
+        fact:'Арцах был десятой из пятнадцати провинций (нахангов) Великой Армении.' },
+      { q:'Какой армянский царь основал в Арцахе город Тигранакерт?', a:['Тигран II Великий','Александр Македонский','Дарий','Помпей'], correct:0,
+        fact:'Тигран II Великий (I в. до н.э.) основал на своих землях несколько городов Тигранакерт, в том числе в Арцахе.' },
+      { q:'Какая древняя порода лошадей — символ Арцаха, «края всадников»?', a:['Карабахская','Ахалтекинская','Арабская','Фризская'], correct:0,
+        fact:'Карабахская лошадь — древняя порода Арцаха, края всадников.' },
+    ] },
+  { name:'Свет письмён', am:'Ա · Բ · Գ · Դ', epoch:'≈ 410 год · Амарас', mode:'letters',
+    intro:'Здесь родилась армянская грамота Арцаха.',
+    sky:'radial-gradient(120% 90% at 50% 92%, #6e3f15 0%, #2c1a0c 45%, #120b06 100%)', mfar:'#2a1c11', mnear:'#160d07',
+    questions:[
+      { q:'Кто открыл в монастыре Амарас первую школу с армянскими буквами?', a:['Месроп Маштоц','Григор Лусаворич','Мовсес Хоренаци','Саак Партев'], correct:0,
+        fact:'Около 410 года Месроп Маштоц, создатель алфавита, открыл в Амарасе первую армянскую школу.' },
+      { q:'Что создал Месроп Маштоц?', a:['Армянский алфавит','Первую крепость','Первый город','Первый флот'], correct:0,
+        fact:'Месроп Маштоц создал армянский алфавит из 36 букв в начале V века.' },
+      { q:'Кто основал монастырь Амарас ещё в IV веке?', a:['Григор Лусаворич','Месроп Маштоц','Гасан-Джалал','Царь Тигран'], correct:0,
+        fact:'Монастырь основал Григор Лусаворич (Просветитель). Там же похоронен его внук — святой Григорис.' },
+    ] },
+  { name:'Золотой век камня', am:'Գանձասար', epoch:'XIII век', mode:'pollen',
+    intro:'Камень расцвёл монастырями и хачкарами.',
+    sky:'linear-gradient(180deg,#74b3da 0%,#a9d6c0 58%,#d6ecae 100%)', mfar:'#5c9560', mnear:'#3a6840',
+    questions:[
+      { q:'Какой князь построил монастырь Гандзасар (1216–1238)?', a:['Гасан-Джалал','Вачаган','Ашот','Смбат'], correct:0,
+        fact:'Гандзасар возвёл князь Гасан-Джалал Дола — главный храм Арцаха.' },
+      { q:'Как называют Гандзасар за его красоту?', a:['«Жемчужина армянского зодчества»','«Каменный лес»','«Седьмое чудо»','«Врата неба»'], correct:0,
+        fact:'За богатую резьбу купола Гандзасар зовут жемчужиной армянской архитектуры.' },
+      { q:'Как называются армянские каменные кресты-памятники?', a:['Хачкары','Стелы','Менгиры','Обелиски'], correct:0,
+        fact:'Хачкар (крест-камень) — символ армянского искусства, в списке наследия ЮНЕСКО.' },
+      { q:'Какой ещё знаменитый монастырь Арцаха построен в XIII веке?', a:['Дадиванк','Эчмиадзин','Севанаванк','Гегард'], correct:0,
+        fact:'Дадиванк (1214–1237) — один из крупнейших монастырских комплексов Арцаха.' },
+      { q:'Чем, кроме архитектуры, знаменит Дадиванк?', a:['Фресками XIII века','Золотыми куполами','Подземным городом','Маяком'], correct:0,
+        fact:'В Дадиванке сохранились редкие армянские фрески XIII века.' },
+    ] },
+  { name:'Стойкость', am:'Խամսայի մելիքություններ', epoch:'XV–XVIII вв.', mode:'leaves',
+    intro:'Пять княжеств хранили свободу в горах.',
+    sky:'linear-gradient(180deg,#9c4a25 0%,#c9712f 45%,#e8b34c 100%)', mfar:'#7a3a20', mnear:'#481f12',
+    questions:[
+      { q:'Как называлось объединение пяти армянских княжеств Арцаха?', a:['Меликства Хамсы','Союз гор','Великий дом','Пять врат'], correct:0,
+        fact:'«Хамса» означает «пять» — пять армянских меликств Карабаха.' },
+      { q:'Сколько меликств входило в Хамсу?', a:['Пять','Три','Семь','Десять'], correct:0,
+        fact:'Пять: Гюлистан, Джраберд, Хачен, Варанда и Дизак.' },
+      { q:'Что хранили меликства сквозь нашествия монголов, Тимура и империй?', a:['Самоуправление и веру','Золотые рудники','Морские пути','Военный флот'], correct:0,
+        fact:'Меликства веками сохраняли армянское самоуправление и христианскую веру.' },
+    ] },
+  { name:'«Мы — наши горы»', am:'Մենք ենք մեր սարերը', epoch:'1813 · 1923 · 1967', mode:'dust',
+    intro:'Дед и бабушка, выросшие прямо из родной земли.',
+    sky:'linear-gradient(180deg,#283050 0%,#5a4254 50%,#9c5a52 100%)', mfar:'#4a3640', mnear:'#2a1d22',
+    questions:[
+      { q:'Как в народе называют монумент «Мы — наши горы»?', a:['Татик у Папик','Мать-Армения','Стражи','Камни мира'], correct:0,
+        fact:'«Татик у Папик» — бабушка и дедушка; символ Арцаха, он есть на гербе республики.' },
+      { q:'В каком году поставили монумент «Мы — наши горы» в Степанакерте?', a:['1967','1918','1945','1991'], correct:0,
+        fact:'Монумент создан в 1967 году скульптором Саргисом Багдасаряном из вулканического туфа.' },
+      { q:'По какому договору 1813 года Карабах вошёл в Российскую империю?', a:['Гюлистанскому','Туркманчайскому','Адрианопольскому','Парижскому'], correct:0,
+        fact:'По Гюлистанскому миру 1813 года. А в 1923-м край включили в состав Азербайджанской ССР.' },
+      { q:'Как называется столица Арцаха?', a:['Степанакерт','Шуши','Горис','Гянджа'], correct:0,
+        fact:'Степанакерт — столица Республики Арцах.' },
+      { q:'Что изображено на гербе Республики Арцах?', a:['Монумент «Мы — наши горы»','Орёл','Гранат','Парусник'], correct:0,
+        fact:'На гербе Арцаха — монумент «Татик у Папик» («Мы — наши горы»).' },
+    ] },
+  { name:'Свобода и испытания', am:'Արցախի Հանրապետություն', epoch:'1988 — 2023', mode:'petals',
+    intro:'Республика Арцах: расцвет, любовь к дому — и утрата.',
+    sky:'linear-gradient(180deg,#2f6f9e 0%,#c98a4e 55%,#ecd49a 100%)', mfar:'#9a5f4a', mnear:'#5e3a30',
+    questions:[
+      { q:'В каком году провозгласили Нагорно-Карабахскую Республику (Арцах)?', a:['1991','1988','1994','2020'], correct:0,
+        fact:'Республика провозглашена 2 сентября 1991 года.' },
+      { q:'Какой фрукт — один из главных символов Армении и Арцаха?', a:['Гранат','Банан','Ананас','Кокос'], correct:0,
+        fact:'Гранат — символ жизни, изобилия и единства армянского народа.' },
+      { q:'Из дерева какого фрукта делают армянский дудук?', a:['Абрикос','Гранат','Дуб','Орех'], correct:0,
+        fact:'Дудук делают из абрикосового дерева; его звучание — наследие ЮНЕСКО.' },
+      { q:'Как зовут древний платан Арцаха возрастом около 2000 лет?', a:['Тнджри','Сосна царей','Дуб героев','Ива слёз'], correct:0,
+        fact:'Платан Тнджри в селе Схторашен — живой свидетель тысячелетий.' },
+      { q:'Какой собор в Шуши был повреждён при обстреле в 2020 году?', a:['Казанчецоц','Эчмиадзин','Гегард','Севанаванк'], correct:0,
+        fact:'Собор Сурб Аменапркич Казанчецоц в Шуши пострадал от обстрела в октябре 2020 года.' },
+      { q:'Какой город считался культурным сердцем Карабаха?', a:['Шуши','Гадрут','Мартуни','Аскеран'], correct:0,
+        fact:'Шуши веками был культурным центром Карабаха.' },
+      { q:'Кто был физиком и командиром, героем освобождения Арцаха?', a:['Леонид Азгалдян','Андраник Озанян','Гарегин Нжде','Вазген Саргсян'], correct:0,
+        fact:'Леонид Азгалдян (1942–1992) — учёный и командир, герой освобождения Арцаха.' },
+    ] },
+  { name:'Память', am:'Մենք ենք մեր սարերը', epoch:'навсегда', mode:'stars',
+    intro:'Арцах живёт, пока звучит его имя.',
+    sky:'linear-gradient(180deg,#060a1c 0%,#0e1530 55%,#1c2547 100%)', mfar:'#141c3a', mnear:'#0a0f22',
+    questions:[
+      { q:'Что означает фраза «Մենք ենք մեր սարերը»?', a:['«Мы — наши горы»','«Мы вернёмся»','«Свет в камне»','«Земля предков»'], correct:0,
+        fact:'«Менк енк мер сарэрэ» — «Мы — наши горы», главные слова Арцаха.' },
+      { q:'Что осталось от Арцаха, когда ушёл его народ?', a:['Память, вера и история','Только камни','Только имя на карте','Ничего'], correct:0,
+        fact:'Монастыри, буквы, песни и память живут в сердцах тех, кто помнит. Это и есть Арцах.' },
+    ] },
+];
+const TOTAL_ERAS = ERAS.length;
+
+/* ════════════ СОСТОЯНИЕ ════════════ */
+let eraIndex=0, qIndex=0, score=0, hearts=3, streak=0, current=null, answered=false, pendingOver=false;
+
+function loadBest(){ try { return (+localStorage.getItem('artsakh_quiz_best'))||0; } catch(e){ return 0; } }
+function saveBest(v){ try { localStorage.setItem('artsakh_quiz_best', v); } catch(e){} }
+let best = loadBest();
+
+/* ════════════ ЗВУК (синтез, без файлов) ════════════ */
+let actx=null;
+function beep(f0,f1,dur,type,vol){
+  try{
+    if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended') actx.resume();
+    const now=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+    o.type=type; o.frequency.setValueAtTime(f0,now);
+    o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),now+dur);
+    g.gain.setValueAtTime(vol,now); g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    o.connect(g).connect(actx.destination); o.start(now); o.stop(now+dur);
+  }catch(e){}
+}
+const sndRight=()=>{ beep(620,930,0.10,'sine',0.10); setTimeout(()=>beep(930,1240,0.10,'sine',0.07),70); };
+const sndWrong=()=>beep(220,90,0.34,'sawtooth',0.13);
+const sndClick=()=>beep(480,520,0.05,'triangle',0.04);
+
+/* ════════════ ЭКРАНЫ ════════════ */
+const screens=['startScreen','eraIntro','overScreen','winScreen'];
+function hideScreens(){ screens.forEach(s=>$(s).classList.add('hidden')); $('questionCard').classList.add('hidden'); }
+
+function setEra(era){
+  $('bg').style.background=era.sky;
+  $('mfar').style.background=era.mfar;
+  $('mnear').style.background=era.mnear;
+  mode=era.mode;
+  $('eraName').textContent=era.name;
+  $('eraNum').textContent=(eraIndex+1);
+}
+function updateHud(){
+  $('score').textContent=score;
+  $('hearts').innerHTML = '♥'.repeat(hearts) + '<span class="lost">'+'♥'.repeat(3-hearts)+'</span>';
+}
+
+/* ════════════ ХОД ИГРЫ ════════════ */
+function startGame(){
+  eraIndex=0; qIndex=0; score=0; hearts=3; streak=0; pendingOver=false;
+  $('hud').classList.remove('hidden'); updateHud();
+  showEraIntro();
+}
+function showEraIntro(){
+  qIndex=0;                       // новая эпоха всегда с первого вопроса
+  const era=ERAS[eraIndex]; setEra(era); updateHud();
+  hideScreens();
+  $('introEpoch').textContent=era.epoch;
+  $('introAm').textContent=era.am;
+  $('introName').textContent='Эпоха '+(eraIndex+1)+'. '+era.name;
+  $('introText').textContent=era.intro;
+  $('eraIntro').classList.remove('hidden');
+}
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i];arr[i]=arr[j];arr[j]=t; } return arr; }
+function prepare(q){ const correctText=q.a[q.correct]; const opts=shuffle(q.a.slice()); return {q:q.q, opts, correctIdx:opts.indexOf(correctText), fact:q.fact}; }
+
+function showQuestion(){
+  const era=ERAS[eraIndex]; setEra(era);
+  current=prepare(era.questions[qIndex]); answered=false;
+  hideScreens();
+  $('qtext').textContent=current.q;
+  const box=$('answers'); box.innerHTML='';
+  current.opts.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='ans';
+    b.innerHTML='<span class="key">'+(i+1)+'</span><span>'+opt+'</span>';
+    b.addEventListener('click',()=>answer(i));
+    box.appendChild(b);
+  });
+  $('feedback').classList.add('hidden');
+  $('questionCard').classList.remove('hidden');
+}
+function answer(i){
+  if(answered) return; answered=true;
+  const btns=$('answers').querySelectorAll('.ans');
+  btns.forEach(b=>b.disabled=true);
+  btns[current.correctIdx].classList.add('correct');
+  const ok = (i===current.correctIdx);
+  if(!ok) btns[i].classList.add('wrong');
+
+  if(ok){ streak++; const bonus=streak>=2?(streak-1)*25:0; score+=100+bonus; sndRight(); }
+  else { hearts--; streak=0; sndWrong(); if(hearts<=0) pendingOver=true; }
+  updateHud();
+
+  $('fmark').textContent = ok ? (streak>=3?('Верно! 🔥 серия '+streak):'Верно!') : 'Не верно';
+  $('fmark').className = ok ? 'ok' : 'no';
+  $('ffact').textContent = current.fact;
+  $('nextBtn').textContent = pendingOver ? 'Итог →' : 'Дальше →';
+  $('feedback').classList.remove('hidden');
+}
+function next(){
+  sndClick();
+  if(pendingOver){ gameOver(); return; }
+  qIndex++;
+  if(qIndex < ERAS[eraIndex].questions.length){ showQuestion(); }
+  else { eraIndex++; if(eraIndex < TOTAL_ERAS) showEraIntro(); else win(); }
+}
+function gameOver(){
+  $('hud').classList.add('hidden'); hideScreens();
+  if(score>best){ best=score; saveBest(best); }
+  $('overScore').textContent=score;
+  $('overLine').textContent='Ты дошёл до эпохи '+(eraIndex+1)+': «'+ERAS[eraIndex].name+'». История ждёт ещё раз.';
+  $('overBest').textContent='Рекорд: '+best;
+  $('overScreen').classList.remove('hidden');
+}
+function win(){
+  const bonus=hearts*150; score+=bonus;
+  $('hud').classList.add('hidden'); hideScreens();
+  const record=score>best; if(record){ best=score; saveBest(best); }
+  $('winScore').textContent=score;
+  $('winLine').textContent='Пройдено 7 эпох, ~2700 лет истории.' + (hearts>0?(' Бонус за жизни: +'+bonus+'.'):'') + (record?' Новый рекорд!':'');
+  $('winBest').textContent='Рекорд: '+best;
+  $('winScreen').classList.remove('hidden');
+}
+
+/* ════════════ ВВОД ════════════ */
+$('startBtn').addEventListener('click', ()=>{ sndClick(); startGame(); });
+$('introBtn').addEventListener('click', ()=>{ sndClick(); showQuestion(); });
+$('nextBtn').addEventListener('click', next);
+$('overBtn').addEventListener('click', ()=>{ sndClick(); startGame(); });
+$('winBtn').addEventListener('click', ()=>{ sndClick(); startGame(); });
+
+addEventListener('keydown', e=>{
+  if(!$('startScreen').classList.contains('hidden')){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sndClick(); startGame(); } return; }
+  if(!$('eraIntro').classList.contains('hidden')){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sndClick(); showQuestion(); } return; }
+  if(!$('overScreen').classList.contains('hidden')||!$('winScreen').classList.contains('hidden')){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sndClick(); startGame(); } return; }
+  if(!$('questionCard').classList.contains('hidden')){
+    if(!answered && e.key>='1' && e.key<='4'){ const i=+e.key-1; if(i<current.opts.length) answer(i); }
+    else if(answered && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); next(); }
+  }
+});
+
+/* ════════════ ЧАСТИЦЫ (атмосфера эпохи) ════════════ */
+const cv=$('particles'), ctx=cv.getContext('2d');
+let W,H,parts=[],mode='embers',T=0;
+const GLYPHS='ԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄ'.split('');
+function resize(){ W=cv.width=innerWidth; H=cv.height=innerHeight; }
+resize(); addEventListener('resize',resize);
+function makePart(){
+  const up=(mode==='embers'||mode==='letters'||mode==='pollen'||mode==='petals');
+  return { x:Math.random()*W, y: mode==='stars'?Math.random()*H:(up?H+Math.random()*H*0.3:-Math.random()*H*0.3),
+    r: mode==='letters'?14+Math.random()*14:1+Math.random()*2.4, sp:0.2+Math.random()*0.7,
+    sway:Math.random()*6.28, swaySp:0.3+Math.random()*0.7, a:Math.random(),
+    glyph:GLYPHS[(Math.random()*GLYPHS.length)|0] };
+}
+function pcolor(a){ switch(mode){
+  case 'embers': return 'rgba(255,205,130,'+(a*0.7)+')';
+  case 'letters':return 'rgba(255,214,150,'+(a*0.85)+')';
+  case 'pollen': return 'rgba(255,255,235,'+(a*0.6)+')';
+  case 'leaves': return 'rgba(220,130,50,'+(a*0.85)+')';
+  case 'dust':   return 'rgba(230,200,200,'+(a*0.45)+')';
+  case 'petals': return 'rgba(210,70,70,'+(a*0.7)+')';
+  case 'stars':  return 'rgba(255,250,225,'+a+')';
+  default: return 'rgba(255,255,255,'+(a*0.5)+')'; } }
+function ploop(){
+  T+=0.016;
+  const want = mode==='stars'?110:54;
+  while(parts.length<want) parts.push(makePart());
+  if(parts.length>want) parts.length=want;
+  ctx.clearRect(0,0,W,H);
+  const up=(mode==='embers'||mode==='letters'||mode==='pollen'||mode==='petals');
+  for(const p of parts){
+    p.sway+=0.01*p.swaySp;
+    if(mode==='stars'){ const tw=0.4+0.6*Math.abs(Math.sin(T*0.8+p.sway)); ctx.fillStyle=pcolor(p.a*tw); ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill(); continue; }
+    p.x+=Math.sin(p.sway)*(mode==='leaves'?1.3:0.6);
+    p.y+=up?-p.sp:p.sp;
+    if(up&&p.y<-40)  Object.assign(p,makePart(),{y:H+20});
+    if(!up&&p.y>H+40) Object.assign(p,makePart(),{y:-20});
+    if(mode==='letters'){ ctx.font=p.r+'px Georgia, serif'; ctx.fillStyle=pcolor(p.a); ctx.fillText(p.glyph,p.x,p.y); }
+    else { ctx.fillStyle=pcolor(p.a); ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill(); }
+  }
+  requestAnimationFrame(ploop);
+}
+// фон стартового экрана — рассвет
+setEra(ERAS[0]); $('eraNum').textContent='1';
+ploop();
+</script>
+</body>
+</html>

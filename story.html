@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<!--
+  ════════════════════════════════════════════════════════════════
+   АРЦАХ — путешествие сквозь века
+   Атмосферная игра-прогулка по эпохам Арцаха.
+
+   КАК ОТКРЫТЬ:  просто дважды кликни по этому файлу — откроется в браузере.
+   КАК ИГРАТЬ:   листай вниз (колёсико / стрелки / точки справа).
+
+   ── КАК ДОБАВИТЬ СВОИ КРАСИВЫЕ ФОТО ──
+   У каждой эпохи есть слой <div class="photo"></div>.
+   1) Положи фото рядом с этим файлом (например foto/amaras.jpg).
+   2) Найди нужную эпоху ниже и в её .photo впиши:
+        style="background-image:url('foto/amaras.jpg')"
+   Фото мягко проявится поверх рисованной сцены.
+
+   ── КАК ДОБАВИТЬ МУЗЫКУ ДУДУКА ──
+   Положи файл duduk.mp3 рядом и убери комментарий с тега <audio> внизу.
+  ════════════════════════════════════════════════════════════════
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏔️%3C/text%3E%3C/svg%3E" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Արցախ · Арцах сквозь века</title>
+<style>
+  /* ─────────────── БАЗА ─────────────── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+
+  html, body { height: 100%; background: #05060c; color: #fff; }
+  body {
+    font-family: var(--serif);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Прокручиваемая лента эпох со «снэпом» по экранам */
+  #scene {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    position: relative;
+    z-index: 1;
+  }
+  #scene::-webkit-scrollbar { width: 0; }
+
+  .era {
+    position: relative;
+    height: 100vh;
+    scroll-snap-align: start;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Слои сцены */
+  .sky      { position: absolute; inset: 0; z-index: 0; }
+  .photo    { position: absolute; inset: 0; z-index: 1;
+              background-size: cover; background-position: center;
+              opacity: 0; transition: opacity 2s ease; }
+  .era.in .photo { opacity: .38; }            /* фото живёт мягким фоном */
+  .mountain { position: absolute; left: -5%; width: 110%; bottom: 0; z-index: 2;
+              will-change: transform; }
+  .glow     { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+
+  /* Силуэты гор через clip-path */
+  .m-far  { height: 46%; clip-path: polygon(0 100%,0 55%,12% 30%,24% 52%,38% 18%,52% 46%,63% 22%,76% 50%,88% 28%,100% 52%,100% 100%); }
+  .m-near { height: 34%; clip-path: polygon(0 100%,0 70%,15% 40%,30% 66%,45% 34%,60% 62%,74% 38%,87% 64%,100% 44%,100% 100%); }
+
+  /* ─────────────── ТЕКСТ ЭПОХИ ─────────────── */
+  .content {
+    position: relative; z-index: 4;
+    max-width: 760px; padding: 0 8vw; text-align: center;
+    opacity: 0; transform: translateY(34px);
+    transition: opacity 1.3s ease .25s, transform 1.3s ease .25s;
+  }
+  .era.in .content { opacity: 1; transform: translateY(0); }
+
+  .epoch  { font-size: clamp(13px, 1.5vw, 16px); letter-spacing: .42em;
+            text-transform: uppercase; opacity: .82; margin-bottom: 18px; }
+  .am     { font-size: clamp(15px, 2vw, 20px); letter-spacing: .1em;
+            opacity: .7; margin-bottom: 10px; }
+  h1, h2  { font-weight: 500; line-height: 1.1; }
+  h1      { font-size: clamp(42px, 8vw, 96px); letter-spacing: .02em; }
+  h2      { font-size: clamp(30px, 5.5vw, 64px); margin-bottom: 26px; }
+  .line   { font-size: clamp(16px, 2.1vw, 21px); line-height: 1.75;
+            opacity: .92; max-width: 620px; margin: 0 auto;
+            text-shadow: 0 2px 24px rgba(0,0,0,.55); }
+  .accent { display: inline-block; width: 64px; height: 2px; margin: 28px auto 0; opacity: .85; }
+
+  /* ─────────────── ТИТУЛ / ФИНАЛ ─────────────── */
+  .hero h1 { text-shadow: 0 4px 60px rgba(0,0,0,.6); }
+  .hint { margin-top: 40px; font-size: 14px; letter-spacing: .3em;
+          text-transform: uppercase; opacity: .6; animation: pulse 2.6s ease-in-out infinite; }
+  .scrolldown { margin-top: 18px; font-size: 26px; opacity: .6; animation: bob 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.32} 50%{opacity:.85} }
+  @keyframes bob   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
+
+  /* ─────────────── ПАЛИТРЫ ЭПОХ ─────────────── */
+  /* 0 · Титул — рассвет */
+  .e0 .sky { background: linear-gradient(180deg,#0b1230 0%,#2a2a55 42%,#caa15a 100%); }
+  .e0 .m-far { background:#26305a; } .e0 .m-near { background:#121a37; } .e0 .accent{background:#f2c879;}
+  /* 1 · Древность — золотой рассвет в горах */
+  .e1 .sky { background: linear-gradient(180deg,#16204a 0%,#3b3d6e 45%,#e2a24c 100%); }
+  .e1 .m-far { background:#2c3a64; } .e1 .m-near { background:#141f3c; } .e1 .accent{background:#f2c879;}
+  /* 2 · Свет письмен — свечи Амараса */
+  .e2 .sky { background: radial-gradient(120% 90% at 50% 92%, #6e3f15 0%, #2c1a0c 45%, #120b06 100%); }
+  .e2 .m-far { background:#2a1c11; } .e2 .m-near { background:#160d07; } .e2 .accent{background:#ffce85;}
+  /* 3 · Золотой век камня — зелёный день */
+  .e3 .sky { background: linear-gradient(180deg,#74b3da 0%,#a9d6c0 58%,#d6ecae 100%); }
+  .e3 .m-far { background:#5c9560; } .e3 .m-near { background:#3a6840; } .e3 .accent{background:#caa23f;}
+  .e3 .content{ color:#1b2a1c; } .e3 .line{ text-shadow:0 2px 20px rgba(255,255,255,.4); }
+  /* 4 · Меликства — осенняя стойкость */
+  .e4 .sky { background: linear-gradient(180deg,#9c4a25 0%,#c9712f 45%,#e8b34c 100%); }
+  .e4 .m-far { background:#7a3a20; } .e4 .m-near { background:#481f12; } .e4 .accent{background:#f3d68f;}
+  /* 5 · «Мы — наши горы» — туфовые сумерки */
+  .e5 .sky { background: linear-gradient(180deg,#283050 0%,#5a4254 50%,#9c5a52 100%); }
+  .e5 .m-far { background:#4a3640; } .e5 .m-near { background:#2a1d22; } .e5 .accent{background:#dd8e6e;}
+  /* 6 · Свобода и испытания — закат любви и прощания */
+  .e6 .sky { background: linear-gradient(180deg,#2f6f9e 0%,#c98a4e 55%,#ecd49a 100%); }
+  .e6 .m-far { background:#9a5f4a; } .e6 .m-near { background:#5e3a30; } .e6 .accent{background:#c0303a;}
+  /* 7 · Память — звёздная ночь */
+  .e7 .sky { background: linear-gradient(180deg,#060a1c 0%,#0e1530 55%,#1c2547 100%); }
+  .e7 .m-far { background:#141c3a; } .e7 .m-near { background:#0a0f22; } .e7 .accent{background:#f2c879;}
+
+  /* Тёплое сияние снизу (свечи / солнце) */
+  .e2 .glow { background: radial-gradient(60% 38% at 50% 100%, rgba(255,180,80,.45), transparent 70%); }
+  .e6 .glow { background: radial-gradient(70% 40% at 50% 100%, rgba(255,200,120,.30), transparent 72%); }
+
+  /* ─────────────── НАВИГАЦИЯ-ТОЧКИ ─────────────── */
+  #dots { position: fixed; right: 26px; top: 50%; transform: translateY(-50%);
+          z-index: 30; display: flex; flex-direction: column; gap: 14px; }
+  #dots button { width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(255,255,255,.55);
+                 background: transparent; cursor: pointer; padding: 0; transition: .35s; }
+  #dots button.active { background: #f2c879; border-color: #f2c879; transform: scale(1.35);
+                        box-shadow: 0 0 14px rgba(242,200,121,.8); }
+
+  /* Канвас с частицами поверх всего (атмосфера) */
+  #particles { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+
+  /* Полоска прогресса */
+  #bar { position: fixed; left: 0; top: 0; height: 3px; width: 0;
+         background: linear-gradient(90deg,#f2c879,#c0303a); z-index: 31; transition: width .25s; }
+
+  @media (max-width:560px){ #dots{ right: 12px; } .epoch{ letter-spacing:.3em; } }
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;left:14px;bottom:12px;z-index:9999;font-family:Georgia,serif;font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.22);text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">← Արցախ</a>
+
+<div id="bar"></div>
+<canvas id="particles"></canvas>
+<nav id="dots"></nav>
+
+<div id="scene">
+
+  <!-- ═══ ТИТУЛ ═══ -->
+  <section class="era e0 hero" data-mode="embers" data-name="Начало">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/gory.jpg')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="am">Արցախ</div>
+      <h1>Арцах</h1>
+      <div class="line">Путешествие сквозь века — от первого имени, высеченного в камне, до света, что остаётся в памяти.</div>
+      <div class="scrolldown">↓</div>
+      <div class="hint">листай вниз</div>
+    </div>
+  </section>
+
+  <!-- ═══ 1 · ДРЕВНОСТЬ ═══ -->
+  <section class="era e1" data-mode="embers" data-name="Древность">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/...')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="epoch">763 г. до н.э. — древность</div>
+      <div class="am">Ուրտեխինի</div>
+      <h2>Земля всадников</h2>
+      <div class="line">Урартский царь Сардури II впервые высёк имя этой земли в камне — <em>Уртехини</em>. Позже Арцах стал десятой провинцией Армянского царства, краем «с наибольшим числом всадников».</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 2 · СВЕТ ПИСЬМЕН ═══ -->
+  <section class="era e2" data-mode="letters" data-name="Письмена">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/amaras.jpg')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="epoch">≈ 410 год — Амарас</div>
+      <div class="am">Ա · Բ · Գ · Դ</div>
+      <h2>Свет письмён</h2>
+      <div class="line">В монастыре Амарас святой Месроп Маштоц, создатель армянского алфавита, открыл первую школу, где учили по новым буквам. Здесь родилась грамота Арцаха.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 3 · ЗОЛОТОЙ ВЕК КАМНЯ ═══ -->
+  <section class="era e3" data-mode="pollen" data-name="Камень">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/gandzasar.jpg')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="epoch">XIII век — расцвет</div>
+      <div class="am">Գանձասար</div>
+      <h2>Золотой век камня</h2>
+      <div class="line">Князь Гасан-Джалал возвёл Гандзасар (1216–1238) — «жемчужину армянского зодчества». Рядом поднялся Дадиванк. Камень расцвёл хачкарами.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 4 · МЕЛИКСТВА ═══ -->
+  <section class="era e4" data-mode="leaves" data-name="Стойкость">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/...')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="epoch">XV–XVIII века — меликства Хамсы</div>
+      <div class="am">Խամսայի մելիքություններ</div>
+      <h2>Стойкость в горах</h2>
+      <div class="line">Сквозь нашествия монголов, Тимура и империй пять меликств Хамсы хранили свободу — крепость за крепостью, село за селом.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 5 · МЫ — НАШИ ГОРЫ ═══ -->
+  <section class="era e5" data-mode="dust" data-name="Татик-Папик">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/tatik-papik.jpg')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="epoch">1813 · 1923 · 1967</div>
+      <div class="am">Մենք ենք մեր սարերը</div>
+      <h2>«Мы — наши горы»</h2>
+      <div class="line">Край вошёл в Российскую империю, затем был отдан Азербайджанской ССР. А в 1967-м над Степанакертом встали Татик и Папик — дед и бабушка, выросшие прямо из родной земли.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 6 · СВОБОДА И ИСПЫТАНИЯ ═══ -->
+  <section class="era e6" data-mode="petals" data-name="Испытания">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/granat.jpg')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="glow"></div>
+    <div class="content">
+      <div class="epoch">1988 — 2023</div>
+      <div class="am">Արցախի Հանրապետություն</div>
+      <h2>Свобода и испытания</h2>
+      <div class="line">Гранатовые сады, дудук, древний платан Тнджри. В 1991-м родилась Республика Арцах. После войн 2020 и 2023 годов почти весь народ покинул родную землю.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+  <!-- ═══ 7 · ПАМЯТЬ ═══ -->
+  <section class="era e7" data-mode="stars" data-name="Память">
+    <div class="sky"></div>
+    <div class="photo"><!-- style="background-image:url('foto/...')" --></div>
+    <div class="mountain m-far"></div>
+    <div class="mountain m-near"></div>
+    <div class="content">
+      <div class="epoch">навсегда</div>
+      <div class="am">Մենք ենք մեր սարերը</div>
+      <h2>Память</h2>
+      <div class="line">Монастыри, буквы, горы — всё осталось в памяти тех, кто помнит. Арцах живёт, пока звучит его имя.<br><br>Мы&nbsp;— наши горы.</div>
+      <span class="accent"></span>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── МУЗЫКА: положи duduk.mp3 рядом и раскомментируй ──
+<audio id="bgm" src="duduk.mp3" loop></audio>
+-->
+
+<script>
+/* ════════════ НАСТРОЙКА СЦЕН ════════════ */
+const eras = Array.from(document.querySelectorAll('.era'));
+const scene = document.getElementById('scene');
+
+/* ── Точки навигации ── */
+const dotsWrap = document.getElementById('dots');
+eras.forEach((era, i) => {
+  const b = document.createElement('button');
+  b.title = era.dataset.name || ('Сцена ' + i);
+  b.addEventListener('click', () => era.scrollIntoView({behavior:'smooth'}));
+  dotsWrap.appendChild(b);
+});
+const dots = Array.from(dotsWrap.children);
+
+/* ── Активная эпоха: проявление текста + смена частиц + точки ── */
+let currentMode = 'embers';
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio > 0.55) {
+      const i = eras.indexOf(e.target);
+      eras.forEach((s,k)=> s.classList.toggle('in', k===i));
+      dots.forEach((d,k)=> d.classList.toggle('active', k===i));
+      currentMode = e.target.dataset.mode || 'embers';
+      document.getElementById('bar').style.width = ((i)/(eras.length-1)*100) + '%';
+    }
+  });
+}, {threshold:[0,.55,1]});
+eras.forEach(s => io.observe(s));
+eras[0].classList.add('in');
+dots[0].classList.add('active');
+
+/* ── Лёгкий параллакс гор от движения мыши ── */
+const farLayers  = document.querySelectorAll('.m-far');
+const nearLayers = document.querySelectorAll('.m-near');
+window.addEventListener('mousemove', (ev) => {
+  const dx = (ev.clientX / window.innerWidth - .5);
+  farLayers.forEach(l  => l.style.transform = `translateX(${dx*18}px)`);
+  nearLayers.forEach(l => l.style.transform = `translateX(${dx*36}px)`);
+});
+
+/* ── Навигация стрелками ── */
+addEventListener('keydown', (e) => {
+  const cur = eras.findIndex(s => s.classList.contains('in'));
+  if (e.key === 'ArrowDown' && cur < eras.length-1) eras[cur+1].scrollIntoView({behavior:'smooth'});
+  if (e.key === 'ArrowUp'   && cur > 0)             eras[cur-1].scrollIntoView({behavior:'smooth'});
+});
+
+/* ════════════ ЧАСТИЦЫ (атмосфера) ════════════ */
+const cv = document.getElementById('particles');
+const ctx = cv.getContext('2d');
+let W, H, parts = [];
+const GLYPHS = 'ԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄ'.split('');
+
+function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+
+function rnd(a,b){ return a + Math.sin((parts.length*97.13 + a*31.7 + b*addSeed())%6.283)* (b-a)*0 + Math.random()*(b-a); }
+function addSeed(){ return performance.now()*0.0001; }
+
+function spawn(){
+  // плотность зависит от режима
+  const want = (currentMode==='stars') ? 120 : 60;
+  while (parts.length < want){
+    parts.push(makePart());
+  }
+  if (parts.length > want) parts.length = want;
+}
+function makePart(){
+  const up = (currentMode==='embers'||currentMode==='letters'||currentMode==='pollen'||currentMode==='petals');
+  return {
+    x: Math.random()*W,
+    y: currentMode==='stars' ? Math.random()*H : (up ? H+Math.random()*H*0.4 : -Math.random()*H*0.4),
+    r: currentMode==='letters' ? 14+Math.random()*16 : 1+Math.random()*2.6,
+    sp: 0.2 + Math.random()*0.8,
+    sway: Math.random()*6.283,
+    swaySp: 0.3 + Math.random()*0.8,
+    a: Math.random(),
+    glyph: GLYPHS[(Math.random()*GLYPHS.length)|0],
+    rot: (Math.random()-.5)*0.6
+  };
+}
+
+function color(mode, a){
+  switch(mode){
+    case 'embers':  return `rgba(255,205,130,${a*0.7})`;
+    case 'letters': return `rgba(255,214,150,${a*0.85})`;
+    case 'pollen':  return `rgba(255,255,235,${a*0.6})`;
+    case 'leaves':  return `rgba(${200+Math.floor(a*40)},${110+Math.floor(a*50)},40,${a*0.85})`;
+    case 'dust':    return `rgba(230,200,200,${a*0.45})`;
+    case 'petals':  return `rgba(210,70,70,${a*0.7})`;
+    case 'stars':   return `rgba(255,250,225,${a})`;
+    default:        return `rgba(255,255,255,${a*0.5})`;
+  }
+}
+
+let t = 0;
+function loop(){
+  t += 0.016;
+  spawn();
+  ctx.clearRect(0,0,W,H);
+  const mode = currentMode;
+  const up = (mode==='embers'||mode==='letters'||mode==='pollen'||mode==='petals');
+
+  for (const p of parts){
+    p.sway += 0.01 * p.swaySp;
+    const drift = Math.sin(p.sway) * (mode==='leaves'?1.4:0.6);
+
+    if (mode==='stars'){
+      const tw = 0.4 + 0.6*Math.abs(Math.sin(t*0.8 + p.sway));
+      ctx.fillStyle = color(mode, p.a*tw);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+      continue;
+    }
+
+    p.x += drift;
+    p.y += up ? -p.sp : p.sp;
+
+    // переинициализация ушедших за край
+    if (up && p.y < -40)  Object.assign(p, makePart(), {y: H+20});
+    if (!up && p.y > H+40) Object.assign(p, makePart(), {y: -20});
+
+    if (mode==='letters'){
+      ctx.font = `${p.r}px var(--serif)`;
+      ctx.fillStyle = color(mode, p.a);
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillText(p.glyph, 0, 0); ctx.restore();
+    } else {
+      ctx.fillStyle = color(mode, p.a);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+    }
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ── Музыка стартует после первого клика (требование браузеров) ── */
+addEventListener('click', () => {
+  const bgm = document.getElementById('bgm');
+  if (bgm && bgm.paused) bgm.play().catch(()=>{});
+}, {once:true});
+</script>
+</body>
+</html>
