@@ -437,8 +437,16 @@ const IMG = {
   duman:'https://upload.wikimedia.org/wikipedia/commons/c/c0/Nikol_Duman2.jpg',
   azgaldyan:'https://upload.wikimedia.org/wikipedia/commons/4/4c/Leonid_Azgaldyan.jpeg',
 };
-// ускорение загрузки: самые большие снимки отдаём в 1920px вместо 3840px (тот же файл, меньше вес)
-Object.keys(IMG).forEach(k=>{ IMG[k]=IMG[k].replace('/3840px-','/1920px-'); });
+// фото скачаны локально в img/ — ради постоянства (не зависят от ссылок Wikimedia);
+// SRC хранит исходные URL Wikimedia для подписей авторства.
+const SRC = {};
+Object.keys(IMG).forEach(k=>{
+  const u = IMG[k].toLowerCase();
+  const ext = u.endsWith('.jpeg') ? 'jpeg' : (u.endsWith('.png') ? 'png' : 'jpg');
+  const local = 'img/' + k + '.' + ext;
+  SRC[local] = IMG[k];
+  IMG[k] = local;
+});
 
 /* ── Тексты интерфейса (3 языка) ── */
 const T = {
@@ -760,7 +768,7 @@ lb.addEventListener('click', e=>{
   else if(e.target.id==='lbNext'){ e.stopPropagation(); lbStep(1); }
   else if(e.target.id!=='lbImg'){ closeLB(); }
 });
-function openFromImg(img){ const item=img.closest('.tl-item, .card'); const cap=item?(item.querySelector('.tl-title, h3')||{}).textContent:''; openLB(img.src, cap); }
+function openFromImg(img){ const item=img.closest('.tl-item, .card'); const cap=item?(item.querySelector('.tl-title, h3')||{}).textContent:''; openLB(img.getAttribute('src'), cap); }
 document.addEventListener('click', e=>{ const img=e.target.closest('.tl-img img, .card .ph img'); if(img) openFromImg(img); });
 document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && document.activeElement && document.activeElement.matches && document.activeElement.matches('.tl-img img, .card .ph img')){ e.preventDefault(); openFromImg(document.activeElement); } });
 addEventListener('keydown', e=>{ if(!lb.classList.contains('open')) return;
@@ -840,7 +848,7 @@ function fileBase(u){
     return name ? {wiki,name} : null;
   }catch(e){ return null; }
 }
-function filePage(u){ const b=fileBase(u); if(!b) return null; const host=b.wiki==='en'?'en.wikipedia.org':'commons.wikimedia.org'; return 'https://'+host+'/wiki/File:'+b.name; }
+function filePage(u){ const w=(typeof SRC!=='undefined'&&SRC[u])?SRC[u]:u; const b=fileBase(w); if(!b) return null; const host=b.wiki==='en'?'en.wikipedia.org':'commons.wikimedia.org'; return 'https://'+host+'/wiki/File:'+b.name; }
 function buildCredits(lang){
   const items=[...TIMELINE,...LANDMARKS,...CULTURE,...FIGURES,...NATURE];
   const seen=new Set(), html=[];
