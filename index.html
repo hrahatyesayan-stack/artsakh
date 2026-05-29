@@ -135,6 +135,9 @@
   #memory .wrap{position:relative;z-index:1;}
   #memory .phrase{font-size:clamp(26px,5vw,48px);color:var(--gold2);margin:8px 0 20px;}
   #memory .mtext{color:var(--muted);max-width:680px;margin:0 auto;font-size:clamp(16px,2vw,19px);}
+  .mfacts{max-width:640px;margin:24px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:11px;}
+  .mfacts div{color:var(--muted);font-size:clamp(15px,2vw,18px);line-height:1.55;}
+  .mfacts div:last-child{color:var(--gold2);}
 
   footer{border-top:1px solid rgba(255,255,255,.07);padding:40px 0;text-align:center;color:var(--muted);font-size:13px;background:#090b13;}
   footer a{color:var(--gold);} footer .credit{margin-top:8px;font-size:12px;opacity:.7;}
@@ -376,6 +379,7 @@
     <div class="eyebrow" data-i18n="memory_eyebrow">Навсегда</div>
     <div class="phrase" lang="hy">Մենք ենք մեր սարերը</div>
     <p class="mtext" data-i18n="memory_text">Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.</p>
+    <div class="mfacts" id="memfacts"></div>
   </div>
 </section>
 
@@ -583,6 +587,19 @@ const NATURE = [
     d:{hy:'Նախապատմական մարդու հնագույն բնակավայրերից մեկը։',ru:'Одна из древнейших стоянок доисторического человека.',en:'One of the oldest sites of prehistoric human habitation.'} },
 ];
 
+/* Память: тихие фактические строки о человеческом масштабе */
+const MEMFACTS = [
+  { hy:'Ավելի քան 2000 տարի անընդհատ հայկական ներկայություն այս հողի վրա։',
+    ru:'Более 2000 лет непрерывного армянского присутствия на этой земле.',
+    en:'Over 2,000 years of continuous Armenian presence on this land.' },
+  { hy:'2023-ի սեպտեմբեր. օրերի ընթացքում գրեթե ողջ ժողովուրդը՝ ավելի քան 100 000 մարդ, լքեց Արցախը։',
+    ru:'Сентябрь 2023: за считанные дни почти весь народ — более 100 000 человек — покинул Арцах.',
+    en:'September 2023: within days almost the entire people — over 100,000 — left Artsakh.' },
+  { hy:'Բայց հիշողությունը մնում է։ Արցախն ապրում է բոլորի մեջ, ովքեր հիշում են։',
+    ru:'Но память остаётся. Арцах жив в каждом, кто помнит.',
+    en:'But memory remains. Artsakh lives in everyone who remembers.' },
+];
+
 /* ── Рендер ── */
 const $=s=>document.querySelector(s);
 function imgTag(src,alt){ return '<img loading="lazy" decoding="async" referrerpolicy="no-referrer" tabindex="0" role="button" aria-label="'+alt.replace(/"/g,'')+'" src="'+src+'" alt="'+alt.replace(/"/g,'')+'">'; }
@@ -612,6 +629,7 @@ function render(lang){
   $('#nature-grid').innerHTML = NATURE.map(cardHtml).join('');
   buildCredits(lang);
   curLang=lang; showFact(lang);
+  $('#memfacts').innerHTML = MEMFACTS.map(f=>'<div>'+f[lang]+'</div>').join('');
 
   initMap(lang);
   observeReveal();
