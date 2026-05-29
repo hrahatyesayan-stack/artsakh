@@ -801,6 +801,41 @@ const GALLERY_RAW = {
   yeghishe:["https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_02.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_02.JPG","https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_05.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_05.JPG","https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_11.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_11.JPG"],
   yerits:["https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Yerits_Mankants_17.jpg/960px-Yerits_Mankants_17.jpg","https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Yerits_Mankants_11.jpg/960px-Yerits_Mankants_11.jpg","https://upload.wikimedia.org/wikipedia/commons/1/18/Yerits_Mankants_12.jpg"],
 };
+// галерейные доп.фото тоже локальны (img/g_*); атрибуция через SRC
+const LOCALG = {
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Gandzasar_Monastery.JPG/960px-Gandzasar_Monastery.JPG":"img/g_bfe52c78ec3e.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/2014_G%C3%B3rski_Karabach%2C_Klasztor_Gandzasar_%2847%29.jpg/960px-2014_G%C3%B3rski_Karabach%2C_Klasztor_Gandzasar_%2847%29.jpg":"img/g_71807696e5e7.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Gandzasar_20182.jpg/960px-Gandzasar_20182.jpg":"img/g_e14f452c294e.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Dadivank_Monastery_%28general_view%29.jpg/960px-Dadivank_Monastery_%28general_view%29.jpg":"img/g_6ad8933c551e.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Dadivank_view.jpg/960px-Dadivank_view.jpg":"img/g_3f502ae95e19.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Dadivank_fresco.JPG/960px-Dadivank_fresco.JPG":"img/g_2e93cd3fc68c.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Dadivank_Monastery.jpg/960px-Dadivank_Monastery.jpg":"img/g_3da87ded7a47.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Amaras_31.JPG/1280px-Amaras_31.JPG":"img/g_a6018189318c.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Amaras_%2815%29.JPG/1280px-Amaras_%2815%29.JPG":"img/g_4094e4e1aa8a.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Amaras_%2812%29.JPG/960px-Amaras_%2812%29.JPG":"img/g_12aca387eb88.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Amaras_19.JPG/960px-Amaras_19.JPG":"img/g_a545d140fb0f.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Ghazanchetsots_Cathedral_01.jpg/1280px-Ghazanchetsots_Cathedral_01.jpg":"img/g_f3bbd8d20a68.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Ghazanchi_Church_as_seen_in_September_of_2022.jpg/1280px-Ghazanchi_Church_as_seen_in_September_of_2022.jpg":"img/g_1d2d7db9fe9f.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/DJI_-Ghazanchetsots.jpg/1280px-DJI_-Ghazanchetsots.jpg":"img/g_db4ceaa98b38.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Stones_of_Tigranakert_ancient_Armenian_city_walls_-_panoramio_%281%29.jpg/960px-Stones_of_Tigranakert_ancient_Armenian_city_walls_-_panoramio_%281%29.jpg":"img/g_0407e08b38e2.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Tigranaket_Artsakh_02.jpg/500px-Tigranaket_Artsakh_02.jpg":"img/g_45ac478194dd.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Tigranaket_Artsakh_04.jpg/500px-Tigranaket_Artsakh_04.jpg":"img/g_3d4561b266c9.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/%C2%AB%D5%84%D5%A5%D5%B6%D6%84_%D5%A5%D5%B6%D6%84%2C_%D5%B4%D5%A5%D6%80_%D5%AC%D5%A5%D5%BC%D5%B6%D5%A5%D6%80%D5%A8%C2%BB4.jpg/1280px-%C2%AB%D5%84%D5%A5%D5%B6%D6%84_%D5%A5%D5%B6%D6%84%2C_%D5%B4%D5%A5%D6%80_%D5%AC%D5%A5%D5%BC%D5%B6%D5%A5%D6%80%D5%A8%C2%BB4.jpg":"img/g_6f179bbff9f3.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/A_view_of_Azatamartikneri_%28Freedom_Fighters%27%29_boulevard_in_Stepanakert.jpg/1280px-A_view_of_Azatamartikneri_%28Freedom_Fighters%27%29_boulevard_in_Stepanakert.jpg":"img/g_048101f85f10.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Holy_Mother_of_God_Cathedral%2C_Stepanakert_2019.jpg/1280px-Holy_Mother_of_God_Cathedral%2C_Stepanakert_2019.jpg":"img/g_dcbf1c4a216f.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/T-72_Tank_memorial_Stepanakert.jpg/1280px-T-72_Tank_memorial_Stepanakert.jpg":"img/g_6c967601503c.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Handaberd_Fortress.jpg/500px-Handaberd_Fortress.jpg":"img/g_d350dd0aa606.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/f/f7/The_Handaberd_fortress.jpg":"img/g_d770c0f22fb6.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%D0%9A%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_%D0%90%D0%BD%D0%B4%D0%B0%D0%B1%D0%B5%D1%80%D0%B4.jpeg/960px-%D0%9A%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_%D0%90%D0%BD%D0%B4%D0%B0%D0%B1%D0%B5%D1%80%D0%B4.jpeg":"img/g_ed781cf8fd2c.jpeg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_02.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_02.JPG":"img/g_209d1bf6e737.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_05.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_05.JPG":"img/g_c7bfb375d9a5.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_11.JPG/500px-Yeghishe_Arakyal_Monastery_-_%D4%B5%D5%B2%D5%AB%D5%B7%D5%A5_%D5%A1%D5%BC%D5%A1%D6%84%D5%B5%D5%A1%D5%AC%D5%AB_%D5%BE%D5%A1%D5%B6%D6%84_11.JPG":"img/g_9b117c4ae17d.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Yerits_Mankants_17.jpg/960px-Yerits_Mankants_17.jpg":"img/g_aa55a48dd091.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Yerits_Mankants_11.jpg/960px-Yerits_Mankants_11.jpg":"img/g_27501210b7d4.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/1/18/Yerits_Mankants_12.jpg":"img/g_24e98952b46c.jpg"
+};
+Object.keys(GALLERY_RAW).forEach(k=>{ GALLERY_RAW[k]=GALLERY_RAW[k].map(u=>{ if(LOCALG[u]){ SRC[LOCALG[u]]=u; return LOCALG[u]; } return u; }); });
+
 function galBase(u){ return decodeURIComponent(u.split('/').pop()).replace(/^\d+px-/,'').toLowerCase(); }
 Object.keys(GALLERY_RAW).forEach(k=>{
   const lead=IMG[k]; if(!lead) return;
