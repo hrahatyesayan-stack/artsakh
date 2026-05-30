@@ -18,6 +18,11 @@
 <meta name="description" content="Արцах / Арцах: история, святыни, культура и память. Трёхъязычное приложение с настоящими фотографиями, картой и викториной — для всех армян." />
 <meta name="theme-color" content="#0b0e18" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏔️%3C/text%3E%3C/svg%3E" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="img/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Արցախ" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Արցախ — история, святыни, культура" />
 <meta property="og:description" content="Историческое приложение об Арцахе: 7 эпох, святыни, культура, карта и викторина. На армянском, русском и английском." />
@@ -985,6 +990,13 @@ if(!dykTimer) dykTimer=setInterval(()=>{ dykI++; showFact(curLang); }, 6500);
 /* старт: язык из памяти; на первом визите — по языку браузера (для армян по миру) */
 function detectLang(){ const l=(navigator.language||'ru').toLowerCase(); return l.startsWith('hy')?'hy':l.startsWith('ru')?'ru':'en'; }
 render(loadLang() || detectLang());
+
+/* PWA: устанавливаемое приложение + работа офлайн */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
