@@ -28,6 +28,7 @@
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
   @media(max-width:480px){ .grid{gap:7px;} }
   .card{position:relative;aspect-ratio:3/4;perspective:800px;cursor:pointer;}
+  .card:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:13px;}
   .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,.8,.3,1);}
   .card.up .inner,.card.done .inner{transform:rotateY(180deg);}
   .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
@@ -149,11 +150,13 @@ function build(){
   const g=$('#grid'); g.innerHTML='';
   deck.forEach((c,i)=>{
     const el=document.createElement('div'); el.className='card'; el.dataset.i=i; el.dataset.k=c.k;
+    el.tabIndex=0; el.setAttribute('role','button'); el.setAttribute('aria-label', lang==='hy'?'քարտ':lang==='en'?'card':'карта');
     const front = c.type==='photo'
       ? `<div class="face fr photo"><img src="${c.img}" alt="" onerror="this.style.opacity=0"></div>`
       : `<div class="face fr name"><span data-k="${c.k}">${(POOL.find(x=>x.k===c.k)||{}).nm[lang]}</span></div>`;
     el.innerHTML=`<div class="inner"><div class="face bk">${MTN}</div>${front}</div>`;
     el.addEventListener('click',()=>flip(i,el));
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flip(i,el); } });
     g.appendChild(el);
   });
   matched=0; moves=0; flipped=[]; lock=false; t0=0;
