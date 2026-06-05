@@ -476,6 +476,24 @@ const IMG = {
   horse:'https://upload.wikimedia.org/wikipedia/commons/6/66/Qarabaq_ati.jpg',
   duman:'https://upload.wikimedia.org/wikipedia/commons/c/c0/Nikol_Duman2.jpg',
   azgaldyan:'https://upload.wikimedia.org/wikipedia/commons/4/4c/Leonid_Azgaldyan.jpeg',
+  tsitsernavank:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/%D0%A6%D0%B8%D1%86%D0%B5%D1%80%D0%BD%D0%B0%D0%B2%D0%B0%D0%BD%D0%BA.jpeg/1280px-%D0%A6%D0%B8%D1%86%D0%B5%D1%80%D0%BD%D0%B0%D0%B2%D0%B0%D0%BD%D0%BA.jpeg',
+  gtchavank:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/%D5%8E%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%C2%AB%D4%B3%D5%BF%D5%B9%D5%A1%D5%BE%D5%A1%D5%B6%D6%84%C2%BB_25.jpg/1280px-%D5%8E%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80_%C2%AB%D4%B3%D5%BF%D5%B9%D5%A1%D5%BE%D5%A1%D5%B6%D6%84%C2%BB_25.jpg',
+  kanach_zham:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Kanach_Zham2018-13.jpg/1280px-Kanach_Zham2018-13.jpg',
+  askeran:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/%C6%8Fsg%C9%99ran_qalas%C4%B1_2023-c%C3%BC_ilin_oktyabr_ay%C4%B1nda.jpg/1280px-%C6%8Fsg%C9%99ran_qalas%C4%B1_2023-c%C3%BC_ilin_oktyabr_ay%C4%B1nda.jpg',
+  shushiberd:'https://upload.wikimedia.org/wikipedia/commons/9/91/Shushi_fortress%2C_Republic_of_Artsakh_%282017%29_Gardmanahay.jpg',
+  kachaghakaberd:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/%D0%92%D0%B8%D0%B4_%D0%BD%D0%B0_%D0%BA%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_%D0%9A%D0%B0%D1%87%D0%B0%D1%85%D0%B0%D0%BA%D0%B0%D0%B1%D0%B5%D1%80%D0%B44.JPG/1280px-%D0%92%D0%B8%D0%B4_%D0%BD%D0%B0_%D0%BA%D1%80%D0%B5%D0%BF%D0%BE%D1%81%D1%82%D1%8C_%D0%9A%D0%B0%D1%87%D0%B0%D1%85%D0%B0%D0%BA%D0%B0%D0%B1%D0%B5%D1%80%D0%B44.JPG',
+  jraberd:'https://upload.wikimedia.org/wikipedia/commons/f/f6/Jraberd_Fortress_of_the_Princely_House_of_Atabekians.jpg',
+  kochari:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kochari_-_Armenian_folk_dance.png/1280px-Kochari_-_Armenian_folk_dance.png',
+  manuscript:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Malnazar_-_Decorated_Incipit_Page_-_Google_Art_Project.jpg/1280px-Malnazar_-_Decorated_Incipit_Page_-_Google_Art_Project.jpg',
+  lavash:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Lavash%2C_Temple_Fortune%2C_London_%284444275978%29.jpg/1280px-Lavash%2C_Temple_Fortune%2C_London_%284444275978%29.jpg',
+  trndez:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Trndez_in_Dadivanq.jpg/1280px-Trndez_in_Dadivanq.jpg',
+  tutovka:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Tutovka.JPG/1280px-Tutovka.JPG',
+  tartar:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Togana_Ter-Ter_river_e-citizen.jpg/1280px-Togana_Ter-Ter_river_e-citizen.jpg',
+  metskirs:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Mount_Kirs.jpg/1280px-Mount_Kirs.jpg',
+  dizapayt:'https://upload.wikimedia.org/wikipedia/commons/6/69/Dizapayt.jpg',
+  barkhudariants:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bishop_Makar_Barkhudaryants.jpg/1280px-Bishop_Makar_Barkhudaryants.jpg',
+  raffi:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Raffi.jpg/1280px-Raffi.jpg',
+  leo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Leo_%28Arakel_Babakhanyan%29.jpg/1280px-Leo_%28Arakel_Babakhanyan%29.jpg',
 };
 // фото скачаны локально в img/ — ради постоянства (не зависят от ссылок Wikimedia);
 // SRC хранит исходные URL Wikimedia для подписей авторства.
@@ -591,6 +609,20 @@ const LANDMARKS = [
     d:{hy:'9-րդ դարի ամրոց Խաչենի իշխանությունում։',ru:'Крепость IX века в армянском княжестве Хачен.',en:'A 9th-century fortress in the Armenian principality of Khachen.'} },
   { img:IMG.vankasar, t:{hy:'Վանքասար',ru:'Ванкасар',en:'Vankasar'},
     d:{hy:'7-րդ դարի հայկական եկեղեցի Արցախի բարձունքին։',ru:'Армянская церковь VII века на вершине холма в Арцахе.',en:'A 7th-century Armenian church atop a hill in Artsakh.'} },
+  { img:IMG.tsitsernavank, t:{hy:'Ծիծեռնավանք',ru:'Цицернаванк',en:'Tsitsernavank'},
+    d:{hy:'Վաղ քրիստոնեական բազիլիկ (V–VI դդ.)՝ տարածաշրջանի հնագույն եկեղեցիներից։',ru:'Раннехристианская базилика (V–VI вв.) — одна из древнейших церквей края.',en:'An early Christian basilica (5th–6th c.), among the oldest churches of the region.'} },
+  { img:IMG.gtchavank, t:{hy:'Գտչավանք',ru:'Гтчаванк',en:'Gtchavank'},
+    d:{hy:'XIII դարի վանք Տող գյուղի մոտ՝ պատմական Դիզակում։',ru:'Монастырь XIII века близ села Тог, в историческом Дизаке.',en:'A 13th-century monastery near Togh village, in historic Dizak.'} },
+  { img:IMG.kanach_zham, t:{hy:'Կանաչ ժամ (Շուշի)',ru:'Канач жам (Шуши)',en:'Kanach Zham (Shushi)'},
+    d:{hy:'Շուշիի «Կանաչ ժամ» եկեղեցին (1847)՝ Ղազանչեցոցից վեր։',ru:'Шушинская церковь «Канач жам» («Зелёная», 1847) выше Казанчецоца.',en:'The “Green Chapel” (Kanach Zham) of Shushi (1847), just above Ghazanchetsots.'} },
+  { img:IMG.askeran, t:{hy:'Մայրաբերդ (Ասկերան)',ru:'Аскеранская крепость',en:'Askeran Fortress'},
+    d:{hy:'XVIII դարի ամրոց Քարքառի ափին՝ Շուշիի մատույցները պահպանող։',ru:'Крепость XVIII века на реке Каркар, прикрывавшая подступы к Шуши.',en:'An 18th-century fortress on the Karkar river, guarding the approach to Shushi.'} },
+  { img:IMG.shushiberd, t:{hy:'Շուշիի բերդ',ru:'Шушинская крепость',en:'Shushi Fortress'},
+    d:{hy:'Շուշի քաղաքը պարփակող միջնադարյան բերդապարիսպները։',ru:'Средневековые крепостные стены, опоясывающие город Шуши.',en:'The medieval fortress walls enclosing the town of Shushi.'} },
+  { img:IMG.kachaghakaberd, t:{hy:'Քաջաղակաբերդ',ru:'Качахакаберд',en:'Kachaghakaberd'},
+    d:{hy:'Ժայռի վրա կանգնած միջնադարյան անմատչելի ամրոց Խաչենում։',ru:'Средневековая неприступная крепость на скале в Хачене.',en:'A nearly impregnable medieval clifftop fortress in Khachen.'} },
+  { img:IMG.jraberd, t:{hy:'Ջրաբերդ',ru:'Джраберд',en:'Jraberd'},
+    d:{hy:'Միջնադարյան ամրոց Թարթառի ափին՝ Ատաբեկյանների մելիքության կենտրոն։',ru:'Средневековая крепость на реке Тертер — центр меликства Атабекянов.',en:'A medieval fortress on the Tartar river — seat of the Atabekian melikdom.'} },
 ];
 
 const CULTURE = [
@@ -610,6 +642,16 @@ const CULTURE = [
     d:{hy:'Ավանդական հայկական քաղցր հաց՝ սիրված նաև Արցախում։',ru:'Традиционный армянский сладкий хлеб, любимый и в Арцахе.',en:'A traditional Armenian sweet bread, beloved in Artsakh too.'} },
   { img:IMG.horse, t:{hy:'Ղարաբաղի ձին',ru:'Карабахская лошадь',en:'Karabakh horse'},
     d:{hy:'Արցախի հնագույն ձիատեսակը՝ «հեծյալների երկրի» խորհրդանիշ։',ru:'Древняя порода лошадей Арцаха — символ «края всадников».',en:'An ancient horse breed of Artsakh — symbol of the “land of horsemen”.'} },
+  { img:IMG.kochari, t:{hy:'Քոչարի',ru:'Кочари',en:'Kochari'},
+    d:{hy:'Հայկական ժողովրդական պարը՝ ՅՈՒՆԵՍԿՕ-ի ժառանգության ցանկում (2017)։',ru:'Армянский народный круговой танец — в списке ЮНЕСКО (2017).',en:'An Armenian folk circle dance, on the UNESCO heritage list (2017).'} },
+  { img:IMG.lavash, t:{hy:'Լավաշ',ru:'Лаваш',en:'Lavash'},
+    d:{hy:'Թոնրի բարակ հացը՝ ՅՈՒՆԵՍԿՕ-ի ժառանգության ցանկում (2014)։',ru:'Тонкий хлеб из тонира — в списке ЮНЕСКО (2014).',en:'Thin bread baked in a tonir, on the UNESCO heritage list (2014).'} },
+  { img:IMG.manuscript, t:{hy:'Մանրանկարչություն',ru:'Армянская миниатюра',en:'Armenian miniature'},
+    d:{hy:'Հայկական մանրանկարչությունը՝ ձեռագիր Ավետարանների փառքը։',ru:'Армянская миниатюра — краса рукописных Евангелий.',en:'Armenian illumination — the glory of handwritten Gospels.'} },
+  { img:IMG.trndez, t:{hy:'Տրնդեզ',ru:'Трндез',en:'Trndez'},
+    d:{hy:'Տյառնընդառաջի կրակի տոնը. այս լուսանկարը՝ Դադիվանքում։',ru:'Праздник Трндез с прыжками через огонь; этот снимок — в Дадиванке.',en:'The Trndez fire feast; this photo was taken at Dadivank.'} },
+  { img:IMG.tutovka, t:{hy:'Թթի օղի',ru:'Тутовка',en:'Mulberry vodka'},
+    d:{hy:'Թթի օղին՝ Արցախի ավանդական թթենու թունդ թորվածքը։',ru:'Тутовка — традиционная для Карабаха крепкая тутовая водка.',en:'Tutovka — a strong mulberry spirit traditional to Karabakh.'} },
 ];
 
 const FIGURES = [
@@ -625,6 +667,12 @@ const FIGURES = [
     d:{hy:'Արցախցի ֆիդայի և ազատամարտիկ (1867–1914)։',ru:'Арцахский фидаи и борец за свободу (1867–1914).',en:'An Artsakh-born fedayi and freedom fighter (1867–1914).'} },
   { img:IMG.azgaldyan, t:{hy:'Լեոնիդ Ազգալդյան',ru:'Леонид Азгалдян',en:'Leonid Azgaldyan'},
     d:{hy:'Ֆիզիկոս և հրամանատար, Արցախի ազատագրման հերոս (1942–1992)։',ru:'Учёный и командир, герой освобождения Арцаха (1942–1992).',en:'Scientist and commander, a hero of the liberation of Artsakh (1942–1992).'} },
+  { img:IMG.barkhudariants, t:{hy:'Մակար Բարխուդարյան',ru:'Макар Бархударянц',en:'Makar Barkhudariants'},
+    d:{hy:'Եպիսկոպոս և ազգագրագետ (1834–1906). նկարագրեց Արցախի հուշարձանները։',ru:'Епископ и этнограф (1834–1906); описал памятники Арцаха.',en:'Bishop and ethnographer (1834–1906); documented the monuments of Artsakh.'} },
+  { img:IMG.raffi, t:{hy:'Րաֆֆի',ru:'Раффи',en:'Raffi'},
+    d:{hy:'Վիպասան (1835–1888). «Խամսայի մելիքությունները»՝ Արցախի մասին։',ru:'Романист (1835–1888); «Меликства Хамсы» — об Арцахе.',en:'Novelist (1835–1888); his “Five Melikdoms” tells of Artsakh.'} },
+  { img:IMG.leo, t:{hy:'Լեո',ru:'Лео',en:'Leo'},
+    d:{hy:'Պատմաբան (1860–1932). ուսումնասիրեց Ղարաբաղի մելիքությունները։',ru:'Историк (1860–1932); изучал меликства Карабаха.',en:'Historian (1860–1932); studied the melikdoms of Karabakh.'} },
 ];
 
 const NATURE = [
@@ -636,6 +684,12 @@ const NATURE = [
     d:{hy:'Մոտ 2000-ամյա սոսի Սխտորաշեն գյուղում։',ru:'Платан возрастом около 2000 лет в селе Схторашен.',en:'A plane tree about 2000 years old in Skhtorashen village.'} },
   { img:IMG.azokh, t:{hy:'Ազոխի քարանձավ',ru:'Пещера Азох',en:'Azokh Cave'},
     d:{hy:'Նախապատմական մարդու հնագույն բնակավայրերից մեկը։',ru:'Одна из древнейших стоянок доисторического человека.',en:'One of the oldest sites of prehistoric human habitation.'} },
+  { img:IMG.tartar, t:{hy:'Թարթառ գետ',ru:'Река Тертер',en:'Tartar River'},
+    d:{hy:'Արցախի խոշորագույն գետերից մեկը՝ սնում է Սարսանգը։',ru:'Одна из крупнейших рек Арцаха; питает Сарсангское водохранилище.',en:'One of Artsakh’s largest rivers; it feeds the Sarsang reservoir.'} },
+  { img:IMG.metskirs, t:{hy:'Մեծ Քիրս',ru:'Большой Кирс',en:'Mount Kirs'},
+    d:{hy:'Մեծ Քիրսը (~2725 մ)՝ Արցախի ամենաբարձր գագաթը։',ru:'Большой Кирс (~2725 м) — высочайшая вершина Арцаха.',en:'Mount Kirs (~2725 m), the highest peak of Artsakh.'} },
+  { img:IMG.dizapayt, t:{hy:'Դիզափայտ',ru:'Дизапайт',en:'Dizapayt'},
+    d:{hy:'Սուրբ լեռը (2478 մ)՝ գագաթին Կատարո վանքով։',ru:'Священная гора (2478 м), увенчанная монастырём Катаро.',en:'A sacred mountain (2478 m), crowned by the Kataro monastery.'} },
 ];
 
 /* Память: тихие фактические строки о человеческом масштабе */
