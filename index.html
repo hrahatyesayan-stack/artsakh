@@ -364,6 +364,17 @@
   </div>
 </section>
 
+<section id="towns">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow" data-i18n="towns_eyebrow">Города и сёла</div>
+      <h2 data-i18n="towns_h">Города и сёла</h2>
+      <p class="lead" data-i18n="towns_lead">Города и сёла, где бьётся сердце Арцаха.</p>
+    </div>
+    <div class="grid" id="towns-grid"></div>
+  </div>
+</section>
+
 <section id="dyk">
   <div class="wrap reveal">
     <div class="eyebrow" data-i18n="dyk_eyebrow">Знаете ли вы?</div>
@@ -505,6 +516,13 @@ const IMG = {
   madatov:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Madatov.jpg/1280px-Madatov.jpg',
   umbrellawaterfall:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/The_Umbrella.JPG/1280px-The_Umbrella.JPG',
   khachenaget:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-1_139.jpg/1280px-%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-1_139.jpg',
+  martakert:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Mardakert_002.jpg/1280px-Mardakert_002.jpg',
+  berdzor:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Berdzor060.JPG/1280px-Berdzor060.JPG',
+  karvachar:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Karvachar030.JPG/1280px-Karvachar030.JPG',
+  vank:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Vank_Village_in_Karabakh.jpg/1280px-Vank_Village_in_Karabakh.jpg',
+  kolatak:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/%D0%9A%D0%BE%D0%BB%D0%B0%D1%82%D0%B0%D0%BA%2C_%D0%BD%D0%BE%D1%8F%D0%B1%D1%80%D1%8C_2009%D0%B3..JPG/1280px-%D0%9A%D0%BE%D0%BB%D0%B0%D1%82%D0%B0%D0%BA%2C_%D0%BD%D0%BE%D1%8F%D0%B1%D1%80%D1%8C_2009%D0%B3..JPG',
+  hintagher:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/%D4%B5%D5%AF%D5%A5%D5%B2%D5%A5%D6%81%D5%AB_%D4%B1%D5%B4%D5%A5%D5%B6%D5%A1%D6%83%D6%80%D5%AF%D5%AB%D5%B9%2C_Church_of_the_Savior.jpg/1280px-%D4%B5%D5%AF%D5%A5%D5%B2%D5%A5%D6%81%D5%AB_%D4%B1%D5%B4%D5%A5%D5%B6%D5%A1%D6%83%D6%80%D5%AF%D5%AB%D5%B9%2C_Church_of_the_Savior.jpg',
+  avetaranots:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Avetaranoc.jpg/1280px-Avetaranoc.jpg',
 };
 // фото скачаны локально в img/ — ради постоянства (не зависят от ссылок Wikimedia);
 // SRC хранит исходные URL Wikimedia для подписей авторства.
@@ -530,7 +548,7 @@ const T = {
     play_story_t:'Դարերի միջով', play_story_d:'Մթնոլորտային ճանապարհորդություն Արցախի դարաշրջաններով։', play_go:'Խաղալ →',
     memory_eyebrow:'Հավերժ', memory_text:'Այս կայքը նվիրված է Արցախին՝ նրա վանքերին, մարդկանց և հազարամյա պատմությանը։ Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։',
     nav_map:'Քարտեզ', map_eyebrow:'Քարտեզի վրա', map_h:'Արցախի ատլաս', map_lead:'Սեղմի՛ր նշանին՝ վայրի մասին իմանալու համար։',
-    nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։',
+    nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։', towns_eyebrow:'Հողն ու մարդիկ', towns_h:'Քաղաքներ ու գյուղեր', towns_lead:'Քաղաքներ ու գյուղեր, որտեղ բաբախում է Արցախի սիրտը։',
     footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը' },
   ru:{ skip:'Перейти к содержанию', nav_history:'История', nav_holy:'Святыни', nav_culture:'Культура', nav_play:'Игры', nav_memory:'Память',
     hero_tag:'Земля, высеченная в камне и хранимая в сердце', hero_sub:'История · Святыни · Культура · Память', hero_cta:'Играть в викторину',
@@ -543,7 +561,7 @@ const T = {
     play_story_t:'Сквозь века', play_story_d:'Атмосферное путешествие по эпохам Арцаха.', play_go:'Играть →',
     memory_eyebrow:'Навсегда', memory_text:'Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.',
     nav_map:'Карта', map_eyebrow:'На карте', map_h:'Атлас Арцаха', map_lead:'Нажми на метку, чтобы узнать о месте.',
-    nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.',
+    nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.', towns_eyebrow:'Земля и люди', towns_h:'Города и сёла', towns_lead:'Города и сёла, где бьётся сердце Арцаха.',
     footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение' },
   en:{ skip:'Skip to content', nav_history:'History', nav_holy:'Sacred sites', nav_culture:'Culture', nav_play:'Games', nav_memory:'Memory',
     hero_tag:'A land carved in stone, kept in the heart', hero_sub:'History · Sacred sites · Culture · Memory', hero_cta:'Play the quiz',
@@ -556,7 +574,7 @@ const T = {
     play_story_t:'Through the ages', play_story_d:'An atmospheric journey through the eras of Artsakh.', play_go:'Play →',
     memory_eyebrow:'Forever', memory_text:'This site is a tribute to Artsakh — its monasteries, its people and its millennia of history. Artsakh lives as long as its name is spoken.',
     nav_map:'Map', map_eyebrow:'On the map', map_h:'Atlas of Artsakh', map_lead:'Tap a marker to learn about the place.',
-    nav_figures:'Figures', figures_eyebrow:'Faces of history', figures_h:'Figures', figures_lead:'Those who shaped the history of Artsakh.', dyk_eyebrow:'Did you know?', nature_eyebrow:'Gems of nature', nature_h:'Nature', nature_lead:'The canyons, waters and ancient trees of Artsakh.',
+    nav_figures:'Figures', figures_eyebrow:'Faces of history', figures_h:'Figures', figures_lead:'Those who shaped the history of Artsakh.', dyk_eyebrow:'Did you know?', nature_eyebrow:'Gems of nature', nature_h:'Nature', nature_lead:'The canyons, waters and ancient trees of Artsakh.', towns_eyebrow:'Land and people', towns_h:'Towns & villages', towns_lead:'Towns and villages where the heart of Artsakh beats.',
     footer_made:'Made with love for Artsakh 🇦🇲', footer_credit:'Photographs — Wikimedia Commons (free licenses).', footer_sources:'Photo sources:', footer_print:'Print / PDF', footer_install:'📲 Install app' },
 };
 
@@ -725,6 +743,23 @@ const NATURE = [
     d:{hy:'Խաչենագետը՝ Գանձասարի ու Խաչենի իշխանության գետը։',ru:'Река Хаченагет — у Гандзасара и княжества Хачен.',en:'The Khachen river — by Gandzasar and the principality of Khachen.'} },
 ];
 
+const TOWNS = [
+  { img:IMG.martakert, t:{hy:'Մարտակերտ',ru:'Мартакерт',en:'Martakert'},
+    d:{hy:'Մարտակերտ՝ Արցախի հյուսիսի շրջանային կենտրոնը։',ru:'Мартакерт — районный центр на севере Арцаха.',en:'Martakert — a district center in northern Artsakh.'} },
+  { img:IMG.berdzor, t:{hy:'Բերձոր',ru:'Бердзор (Лачин)',en:'Berdzor (Lachin)'},
+    d:{hy:'Բերձոր՝ Հայաստանն ու Արցախը կապող միջանցքի քաղաքը։',ru:'Бердзор — город на коридоре, связывавшем Армению и Арцах.',en:'Berdzor — a town on the corridor that linked Armenia and Artsakh.'} },
+  { img:IMG.karvachar, t:{hy:'Քարվաճառ',ru:'Карвачар',en:'Karvachar'},
+    d:{hy:'Քարվաճառ՝ լեռնային քաղաք Թարթառի վերին ավազանում։',ru:'Карвачар — горный город в верховьях Тертера.',en:'Karvachar — a mountain town in the upper Tartar basin.'} },
+  { img:IMG.vank, t:{hy:'Վանք',ru:'Ванк',en:'Vank'},
+    d:{hy:'Վանք գյուղը՝ Գանձասար վանքի ստորոտին։',ru:'Село Ванк — у подножия монастыря Гандзасар.',en:'The village of Vank — at the foot of Gandzasar monastery.'} },
+  { img:IMG.kolatak, t:{hy:'Քոլատակ',ru:'Колатак',en:'Kolatak'},
+    d:{hy:'Քոլատակ՝ գյուղ Կոշիկ անապատի մոտ, Մարտակերտում։',ru:'Колатак — село близ пустыни Кошик, в Мартакерте.',en:'Kolatak — a village near the Koshik hermitage, in Martakert.'} },
+  { img:IMG.hintagher, t:{hy:'Հին Թաղեր',ru:'Хин Тахер',en:'Hin Tagher'},
+    d:{hy:'Հին Թաղեր՝ հարավային Հադրութի գյուղը՝ Ամենափրկիչ եկեղեցով։',ru:'Хин Тахер — село на юге Гадрута с церковью Аменапркич.',en:'Hin Tagher — a southern Hadrut village with a Church of the Savior.'} },
+  { img:IMG.avetaranots, t:{hy:'Ավետարանոց',ru:'Аветараноц',en:'Avetaranots'},
+    d:{hy:'Ավետարանոց՝ Վարանդայի մելիք-Շահնազարյանների նստավայրը։',ru:'Аветараноц — резиденция меликов Варанды (Мелик-Шахназарян).',en:'Avetaranots — a seat of the Melik-Shahnazaryan princes of Varanda.'} },
+];
+
 /* Память: тихие фактические строки о человеческом масштабе */
 const MEMFACTS = [
   { hy:'Ավելի քան 2000 տարի անընդհատ հայկական ներկայություն այս հողի վրա։',
@@ -765,6 +800,7 @@ function render(lang){
   $('#culture-grid').innerHTML = CULTURE.map(cardHtml).join('');
   $('#figures-grid').innerHTML = FIGURES.map(cardHtml).join('');
   $('#nature-grid').innerHTML = NATURE.map(cardHtml).join('');
+  $('#towns-grid').innerHTML = TOWNS.map(cardHtml).join('');
   buildCredits(lang);
   curLang=lang; showFact(lang);
   $('#memfacts').innerHTML = MEMFACTS.map(f=>'<div>'+f[lang]+'</div>').join('');
@@ -1011,13 +1047,14 @@ Object.keys(GALLERY_RAW).forEach(k=>{
 });
 
 /* поиск по разделам (на текущем языке) */
-const SECLABEL={history:'nav_history',holy:'nav_holy',culture:'nav_culture',figures:'nav_figures',nature:'nature_h'};
+const SECLABEL={history:'nav_history',holy:'nav_holy',culture:'nav_culture',figures:'nav_figures',nature:'nature_h',towns:'towns_h'};
 const SINDEX=[
   ...TIMELINE.map(x=>({t:x.t,d:x.d,sec:'history'})),
   ...LANDMARKS.map(x=>({t:x.t,d:x.d,sec:'holy'})),
   ...CULTURE.map(x=>({t:x.t,d:x.d,sec:'culture'})),
   ...FIGURES.map(x=>({t:x.t,d:x.d,sec:'figures'})),
   ...NATURE.map(x=>({t:x.t,d:x.d,sec:'nature'})),
+  ...TOWNS.map(x=>({t:x.t,d:x.d,sec:'towns'})),
 ];
 const sOv=$('#searchOverlay'), sIn=$('#searchInput'), sRes=$('#searchResults');
 function renderSearch(q){
