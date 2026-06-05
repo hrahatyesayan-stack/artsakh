@@ -236,7 +236,7 @@
   }
   /* Печать: чистый документ без интерфейса (Cmd/Ctrl+P → сохранить как PDF) */
   @media print {
-    .flagbar, nav, #toTop, #progress, #lightbox, #searchOverlay, #memory .stars, .scrollcue, #map, #play, #printBtn, #installBtn { display:none !important; }
+    .flagbar, nav, #toTop, #progress, #lightbox, #searchOverlay, #memory .stars, .scrollcue, #map, #play, #printBtn, #installBtn, #shareBtn { display:none !important; }
     html, body { background:#fff !important; color:#111 !important; }
     .reveal { opacity:1 !important; transform:none !important; }
     section { padding:14px 0 !important; break-inside:avoid; }
@@ -469,6 +469,7 @@
     <div data-i18n="footer_made">Сделано с любовью к Арцаху 🇦🇲</div>
     <button id="printBtn" class="printbtn" data-i18n="footer_print">Печать / PDF</button>
     <button id="installBtn" class="printbtn" data-i18n="footer_install" style="display:none;margin-left:10px">📲 Установить приложение</button>
+    <button id="shareBtn" class="printbtn" data-i18n="footer_share" style="margin-left:10px">🔗 Поделиться</button>
     <div class="credit" data-i18n="footer_credit">Фотографии — Wikimedia Commons (свободные лицензии).</div>
     <div class="credit" data-i18n="footer_sources" style="margin-top:14px">Источники фото:</div>
     <div class="credits" id="creditList"></div>
@@ -602,7 +603,7 @@ const T = {
     memory_eyebrow:'Հավերժ', memory_text:'Այս կայքը նվիրված է Արցախին՝ նրա վանքերին, մարդկանց և հազարամյա պատմությանը։ Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։',
     nav_map:'Քարտեզ', map_eyebrow:'Քարտեզի վրա', map_h:'Արցախի ատլաս', map_lead:'Սեղմի՛ր նշանին՝ վայրի մասին իմանալու համար։',
     nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։', towns_eyebrow:'Հողն ու մարդիկ', towns_h:'Քաղաքներ ու գյուղեր', towns_lead:'Քաղաքներ ու գյուղեր, որտեղ բաբախում է Արցախի սիրտը։',
-    footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը' },
+    footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը', footer_share:'🔗 Կիսվել' },
   ru:{ skip:'Перейти к содержанию', nav_history:'История', nav_holy:'Святыни', nav_culture:'Культура', nav_play:'Игры', nav_memory:'Память',
     hero_tag:'Земля, высеченная в камне и хранимая в сердце', hero_sub:'История · Святыни · Культура · Память', hero_cta:'Играть в викторину', hero_cta2:'Где это? Карта',
     history_eyebrow:'2700 лет', history_h:'История Арцаха', history_lead:'От первого имени, высеченного в камне, до наших дней — семь эпох одной земли.',
@@ -615,7 +616,7 @@ const T = {
     memory_eyebrow:'Навсегда', memory_text:'Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.',
     nav_map:'Карта', map_eyebrow:'На карте', map_h:'Атлас Арцаха', map_lead:'Нажми на метку, чтобы узнать о месте.',
     nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.', towns_eyebrow:'Земля и люди', towns_h:'Города и сёла', towns_lead:'Города и сёла, где бьётся сердце Арцаха.',
-    footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение' },
+    footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение', footer_share:'🔗 Поделиться' },
   en:{ skip:'Skip to content', nav_history:'History', nav_holy:'Sacred sites', nav_culture:'Culture', nav_play:'Games', nav_memory:'Memory',
     hero_tag:'A land carved in stone, kept in the heart', hero_sub:'History · Sacred sites · Culture · Memory', hero_cta:'Play the quiz', hero_cta2:'Where is it? Map',
     history_eyebrow:'2700 years', history_h:'History of Artsakh', history_lead:'From the first name carved in stone to our own day — seven eras of one land.',
@@ -628,7 +629,7 @@ const T = {
     memory_eyebrow:'Forever', memory_text:'This site is a tribute to Artsakh — its monasteries, its people and its millennia of history. Artsakh lives as long as its name is spoken.',
     nav_map:'Map', map_eyebrow:'On the map', map_h:'Atlas of Artsakh', map_lead:'Tap a marker to learn about the place.',
     nav_figures:'Figures', figures_eyebrow:'Faces of history', figures_h:'Figures', figures_lead:'Those who shaped the history of Artsakh.', dyk_eyebrow:'Did you know?', nature_eyebrow:'Gems of nature', nature_h:'Nature', nature_lead:'The canyons, waters and ancient trees of Artsakh.', towns_eyebrow:'Land and people', towns_h:'Towns & villages', towns_lead:'Towns and villages where the heart of Artsakh beats.',
-    footer_made:'Made with love for Artsakh 🇦🇲', footer_credit:'Photographs — Wikimedia Commons (free licenses).', footer_sources:'Photo sources:', footer_print:'Print / PDF', footer_install:'📲 Install app' },
+    footer_made:'Made with love for Artsakh 🇦🇲', footer_credit:'Photographs — Wikimedia Commons (free licenses).', footer_sources:'Photo sources:', footer_print:'Print / PDF', footer_install:'📲 Install app', footer_share:'🔗 Share' },
 };
 
 /* ── Контент: эпохи / святыни / культура ── */
@@ -1178,6 +1179,14 @@ $('#placeImg').addEventListener('click', ()=>openLB(IMG[ATLAS[placeIdx].key], AT
 addEventListener('keydown', e=>{ if(e.key==='Escape') closePlace(); });
 $('#sClose').addEventListener('click', closeSearch);
 $('#printBtn').addEventListener('click', ()=>window.print());
+$('#shareBtn').addEventListener('click', async ()=>{
+  const url='https://hrahatyesayan-stack.github.io/artsakh/';
+  const text = curLang==='hy'?'Արցախ — պատմություն, սրբավայրեր, քարտեզ և խաղեր։':curLang==='en'?'Artsakh — history, sacred sites, map and games.':'Арцах — история, святыни, карта и игры.';
+  try{
+    if(navigator.share){ await navigator.share({title:'Արցախ · Арцах', text, url}); }
+    else if(navigator.clipboard){ await navigator.clipboard.writeText(url); const b=$('#shareBtn'); b.textContent = curLang==='hy'?'✓ Պատճենվեց':curLang==='en'?'✓ Link copied':'✓ Ссылка скопирована'; setTimeout(()=>{ b.textContent=T[curLang].footer_share; },1800); }
+  }catch(e){}
+});
 sOv.addEventListener('click', e=>{ if(e.target===sOv) closeSearch(); });
 addEventListener('keydown', e=>{ if(e.key==='Escape') closeSearch(); });
 
