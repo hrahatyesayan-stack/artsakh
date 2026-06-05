@@ -2,25 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hrahatyesayan-stack.github.io/artsakh/</loc>
-    <lastmod>2026-06-04</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://hrahatyesayan-stack.github.io/artsakh/quiz.html</loc>
-    <lastmod>2026-06-04</lastmod>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/learn.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/game-map.html</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://hrahatyesayan-stack.github.io/artsakh/story.html</loc>
-    <lastmod>2026-06-04</lastmod>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/quiz.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/memory-match.html</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/timeline-game.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/guess.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://hrahatyesayan-stack.github.io/artsakh/story.html</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://hrahatyesayan-stack.github.io/artsakh/runner.html</loc>
-    <lastmod>2026-06-04</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
