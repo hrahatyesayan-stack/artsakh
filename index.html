@@ -499,6 +499,12 @@ const IMG = {
   spitak_khach:'https://upload.wikimedia.org/wikipedia/commons/0/00/Hadruth%2C_Spitak_Khach_%28White_Cross%29_church_-_panoramio.jpg',
   bri_yeghtsi:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/%C2%AB%D4%B2%D5%BC%D5%AB_%D5%A5%D5%B2%D6%81%D5%AB%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg/1280px-%C2%AB%D4%B2%D5%BC%D5%AB_%D5%A5%D5%B2%D6%81%D5%AB%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg',
   taraz:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/ArmenianGirlsErzurum.jpg/1280px-ArmenianGirlsErzurum.jpg',
+  artsakhmuseum:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Artsakh_State_Museum_%2837512504202%29.jpg/1280px-Artsakh_State_Museum_%2837512504202%29.jpg',
+  renaissancesquare:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/NKR_Parliament%2C_Stepanakert.jpg/1280px-NKR_Parliament%2C_Stepanakert.jpg',
+  baghdasaryan:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/%D5%8D%D5%A1%D6%80%D5%A3%D5%AB%D5%BD_%D4%B2%D5%A1%D5%B2%D5%A4%D5%A1%D5%BD%D5%A1%D6%80%D5%B5%D5%A1%D5%B6%2C_%D5%B0%D5%B8%D6%82%D5%B7%D5%A1%D5%BF%D5%A1%D5%AD%D5%BF%D5%A1%D5%AF.JPG/1280px-%D5%8D%D5%A1%D6%80%D5%A3%D5%AB%D5%BD_%D4%B2%D5%A1%D5%B2%D5%A4%D5%A1%D5%BD%D5%A1%D6%80%D5%B5%D5%A1%D5%B6%2C_%D5%B0%D5%B8%D6%82%D5%B7%D5%A1%D5%BF%D5%A1%D5%AD%D5%BF%D5%A1%D5%AF.JPG',
+  madatov:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Madatov.jpg/1280px-Madatov.jpg',
+  umbrellawaterfall:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/The_Umbrella.JPG/1280px-The_Umbrella.JPG',
+  khachenaget:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-1_139.jpg/1280px-%D5%8E%D5%A1%D5%B5%D6%80%D5%AB_%D5%A2%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-1_139.jpg',
 };
 // фото скачаны локально в img/ — ради постоянства (не зависят от ссылок Wikimedia);
 // SRC хранит исходные URL Wikimedia для подписей авторства.
@@ -636,6 +642,10 @@ const LANDMARKS = [
     d:{hy:'Միջնադարյան «Սպիտակ խաչ» վանքը՝ Վանք գյուղի մոտ, Հադրութում։',ru:'Средневековый монастырь «Спитак Хач» («Белый крест») у села Ванк, Гадрут.',en:'The medieval “Spitak Khach” (White Cross) monastery near Vank village, Hadrut.'} },
   { img:IMG.bri_yeghtsi, t:{hy:'Բռի եղցի',ru:'Бри Ехци',en:'Bri Yeghtsi'},
     d:{hy:'Միջնադարյան եկեղեցի-հուշարձան բլրի վրա՝ Հացի գյուղում, Հադրութ։',ru:'Средневековый храм-памятник на холме в селе Хаци, Гадрут.',en:'A medieval hilltop church-monument in Hatsi village, Hadrut.'} },
+  { img:IMG.artsakhmuseum, t:{hy:'Արցախի պետական թանգարան',ru:'Музей Арцаха',en:'Artsakh State Museum'},
+    d:{hy:'Ստեփանակերտի պետական թանգարանը (1939)՝ Արցախի պատմության հազարավոր վկայություններով։',ru:'Государственный музей в Степанакерте (1939) — тысячи свидетельств истории Арцаха.',en:'The State Museum in Stepanakert (1939) — thousands of testaments to Artsakh’s history.'} },
+  { img:IMG.renaissancesquare, t:{hy:'Վերածննդի հրապարակ',ru:'Площадь Возрождения',en:'Renaissance Square'},
+    d:{hy:'Ստեփանակերտի Վերածննդի հրապարակը՝ քաղաքի սիրտը։',ru:'Площадь Возрождения в Степанакерте — сердце города.',en:'Renaissance Square in Stepanakert — the heart of the capital.'} },
 ];
 
 const CULTURE = [
@@ -688,6 +698,10 @@ const FIGURES = [
     d:{hy:'Վիպասան (1835–1888). «Խամսայի մելիքությունները»՝ Արցախի մասին։',ru:'Романист (1835–1888); «Меликства Хамсы» — об Арцахе.',en:'Novelist (1835–1888); his “Five Melikdoms” tells of Artsakh.'} },
   { img:IMG.leo, t:{hy:'Լեո',ru:'Лео',en:'Leo'},
     d:{hy:'Պատմաբան (1860–1932). ուսումնասիրեց Ղարաբաղի մելիքությունները։',ru:'Историк (1860–1932); изучал меликства Карабаха.',en:'Historian (1860–1932); studied the melikdoms of Karabakh.'} },
+  { img:IMG.baghdasaryan, t:{hy:'Սարգիս Բաղդասարյան',ru:'Саркис Багдасарян',en:'Sargis Baghdasaryan'},
+    d:{hy:'Քանդակագործ (1923–2001). ստեղծեց «Մենք ենք մեր սարերը» հուշարձանը։',ru:'Скульптор (1923–2001); создал монумент «Мы — наши горы».',en:'Sculptor (1923–2001); created the “We Are Our Mountains” monument.'} },
+  { img:IMG.madatov, t:{hy:'Վալերիան Մադաթով',ru:'Валериан Мадатов',en:'Valerian Madatov'},
+    d:{hy:'Վարանդայի մելիքական տոհմից իշխան (1782–1829), ռուսական բանակի գեներալ։',ru:'Князь из меликского рода Варанды (1782–1829), генерал русской армии.',en:'A prince of the Varanda melik family (1782–1829), a general in the Russian army.'} },
 ];
 
 const NATURE = [
@@ -705,6 +719,10 @@ const NATURE = [
     d:{hy:'Մեծ Քիրսը (~2725 մ)՝ Արցախի ամենաբարձր գագաթը։',ru:'Большой Кирс (~2725 м) — высочайшая вершина Арцаха.',en:'Mount Kirs (~2725 m), the highest peak of Artsakh.'} },
   { img:IMG.dizapayt, t:{hy:'Դիզափայտ',ru:'Дизапайт',en:'Dizapayt'},
     d:{hy:'Սուրբ լեռը (2478 մ)՝ գագաթին Կատարո վանքով։',ru:'Священная гора (2478 м), увенчанная монастырём Катаро.',en:'A sacred mountain (2478 m), crowned by the Kataro monastery.'} },
+  { img:IMG.umbrellawaterfall, t:{hy:'Մամռոտ քար (Հովանոց)',ru:'Зонтичный водопад',en:'Umbrella Waterfall'},
+    d:{hy:'Մամռապատ ջրվեժը Քարին տակի մոտ՝ Շուշիի ստորոտին։',ru:'Мшистый водопад «Зонтик» (Мамрот кар) у Карин так, под Шуши.',en:'Mamrot Kar (“the Umbrella”) — a mossy waterfall near Karin Tak, below Shushi.'} },
+  { img:IMG.khachenaget, t:{hy:'Խաչենագետ',ru:'Река Хаченагет',en:'Khachen River'},
+    d:{hy:'Խաչենագետը՝ Գանձասարի ու Խաչենի իշխանության գետը։',ru:'Река Хаченагет — у Гандзасара и княжества Хачен.',en:'The Khachen river — by Gandzasar and the principality of Khachen.'} },
 ];
 
 /* Память: тихие фактические строки о человеческом масштабе */
