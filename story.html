@@ -158,10 +158,15 @@
   @media (max-width:560px){ #dots{ right: 12px; } .epoch{ letter-spacing:.3em; } }
   /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
   @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
+  #langs{position:fixed;right:14px;bottom:12px;z-index:9999;display:flex;gap:5px;}
+  #langs button{font-family:var(--serif);font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.22);padding:7px 9px;border-radius:16px;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:.15s;}
+  #langs button.on{color:#0b0e18;background:#f2c879;border-color:#f2c879;font-weight:700;}
+  #langs button:focus-visible{outline:2px solid #f2c879;outline-offset:2px;}
 </style>
 </head>
 <body>
 <a href="index.html" style="position:fixed;left:14px;bottom:12px;z-index:9999;font-family:Georgia,serif;font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.22);text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">← Արցախ</a>
+<div id="langs"><button data-l="hy">ՀԱՅ</button><button data-l="ru">РУС</button><button data-l="en">ENG</button></div>
 
 <div id="bar"></div>
 <canvas id="particles"></canvas>
@@ -344,6 +349,43 @@ addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown' && cur < eras.length-1) eras[cur+1].scrollIntoView({behavior:'smooth'});
   if (e.key === 'ArrowUp'   && cur > 0)             eras[cur-1].scrollIntoView({behavior:'smooth'});
 });
+
+/* ════════════ ЯЗЫК (3 языка) ════════════ */
+const TR = {
+  0:{ h1:{ru:'Арцах',hy:'Արցախ',en:'Artsakh'},
+      line:{ru:'Путешествие сквозь века — от первого имени, высеченного в камне, до света, что остаётся в памяти.',hy:'Ճանապարհորդություն դարերի միջով՝ քարի մեջ փորագրված առաջին անունից մինչև այն լույսը, որ մնում է հիշողության մեջ։',en:'A journey through the ages — from the first name carved in stone to the light that remains in memory.'},
+      hint:{ru:'листай вниз',hy:'թերթի՛ր ներքև',en:'scroll down'} },
+  1:{ epoch:{ru:'763 г. до н.э. — древность',hy:'Ք.ա. 763 — հնություն',en:'763 BC — antiquity'},
+      h2:{ru:'Земля всадников',hy:'Հեծյալների երկիր',en:'Land of horsemen'},
+      line:{ru:'Урартский царь Сардури II впервые высёк имя этой земли в камне — <em>Уртехини</em>. Позже Арцах стал десятой провинцией Армянского царства, краем «с наибольшим числом всадников».',hy:'Ուրարտուի Սարդուրի II արքան առաջին անգամ քարի մեջ փորագրեց այս հողի անունը՝ <em>Ուրտեխինի</em>։ Հետագայում Արցախը դարձավ Հայոց թագավորության տասներորդ նահանգը՝ «ամենաշատ հեծյալներ ունեցող» երկիրը։',en:'The Urartian king Sarduri II first carved the name of this land in stone — <em>Urtekhini</em>. Later Artsakh became the tenth province of the Armenian kingdom, the land “with the most horsemen”.'} },
+  2:{ epoch:{ru:'≈ 410 год — Амарас',hy:'≈ 410 — Ամարաս',en:'≈ 410 — Amaras'},
+      h2:{ru:'Свет письмён',hy:'Գրերի լույս',en:'The light of letters'},
+      line:{ru:'В монастыре Амарас святой Месроп Маштоц, создатель армянского алфавита, открыл первую школу, где учили по новым буквам. Здесь родилась грамота Арцаха.',hy:'Ամարասի վանքում Սուրբ Մեսրոպ Մաշտոցը՝ հայոց այբուբենի ստեղծողը, բացեց առաջին դպրոցը, որտեղ ուսուցանում էին նոր տառերով։ Այստեղ ծնվեց Արցախի գիրը։',en:'At Amaras monastery, St. Mesrop Mashtots, creator of the Armenian alphabet, opened the first school that taught the new letters. Here the literacy of Artsakh was born.'} },
+  3:{ epoch:{ru:'XIII век — расцвет',hy:'XIII դար — ծաղկում',en:'13th century — flourishing'},
+      h2:{ru:'Золотой век камня',hy:'Քարի ոսկե դար',en:'The golden age of stone'},
+      line:{ru:'Князь Гасан-Джалал возвёл Гандзасар (1216–1238) — «жемчужину армянского зодчества». Рядом поднялся Дадиванк. Камень расцвёл хачкарами.',hy:'Հասան-Ջալալ իշխանը կառուցեց Գանձասարը (1216–1238)՝ «հայ ճարտարապետության մարգարիտը»։ Կողքին բարձրացավ Դադիվանքը։ Քարը ծաղկեց խաչքարերով։',en:'Prince Hasan-Jalal raised Gandzasar (1216–1238) — the “pearl of Armenian architecture”. Beside it rose Dadivank. Stone blossomed into khachkars.'} },
+  4:{ epoch:{ru:'XV–XVIII века — меликства Хамсы',hy:'XV–XVIII դդ. — Խամսայի մելիքություններ',en:'15th–18th c. — the Melikdoms of Khamsa'},
+      h2:{ru:'Стойкость в горах',hy:'Հաստատակամություն լեռներում',en:'Resilience in the mountains'},
+      line:{ru:'Сквозь нашествия монголов, Тимура и империй пять меликств Хамсы хранили свободу — крепость за крепостью, село за селом.',hy:'Մոնղոլների, Թամերլանի և կայսրությունների արշավանքների միջով Խամսայի հինգ մելիքությունները պահում էին ազատությունը՝ ամրոց առ ամրոց, գյուղ առ գյուղ։',en:'Through the invasions of the Mongols, Tamerlane and empires, the five melikdoms of Khamsa kept freedom alive — fortress by fortress, village by village.'} },
+  5:{ h2:{ru:'«Мы — наши горы»',hy:'«Մենք ենք մեր սարերը»',en:'“We Are Our Mountains”'},
+      line:{ru:'Край вошёл в Российскую империю, затем был отдан Азербайджанской ССР. А в 1967-м над Степанакертом встали Татик и Папик — дед и бабушка, выросшие прямо из родной земли.',hy:'Երկրամասն անցավ Ռուսական կայսրությանը, ապա տրվեց Ադրբեջանական ԽՍՀ-ին։ Իսկ 1967-ին Ստեփանակերտի վրա կանգնեցին Տատիկն ու Պապիկը՝ տատն ու պապը, բուսած հենց հայրենի հողից։',en:'The region passed to the Russian Empire, then was given to the Azerbaijan SSR. And in 1967 Tatik and Papik rose above Stepanakert — a grandmother and grandfather, grown straight from their native earth.'} },
+  6:{ h2:{ru:'Свобода и испытания',hy:'Ազատություն և փորձություններ',en:'Freedom and trials'},
+      line:{ru:'Гранатовые сады, дудук, древний платан Тнджри. В 1991-м родилась Республика Арцах. После войн 2020 и 2023 годов почти весь народ покинул родную землю.',hy:'Նռան այգիներ, դուդուկ, հնագույն Տնջրի սոսին։ 1991-ին ծնվեց Արցախի Հանրապետությունը։ 2020 և 2023 թվականների պատերազմներից հետո գրեթե ողջ ժողովուրդը լքեց հայրենի հողը։',en:'Pomegranate orchards, the duduk, the ancient Tnjri plane tree. In 1991 the Republic of Artsakh was born. After the wars of 2020 and 2023, almost the entire people left their native land.'} },
+  7:{ epoch:{ru:'навсегда',hy:'հավերժ',en:'forever'},
+      h2:{ru:'Память',hy:'Հիշողություն',en:'Memory'},
+      line:{ru:'Монастыри, буквы, горы — всё осталось в памяти тех, кто помнит. Арцах живёт, пока звучит его имя.<br><br>Мы&nbsp;— наши горы.',hy:'Վանքերը, տառերը, սարերը՝ ամեն ինչ մնաց նրանց հիշողության մեջ, ովքեր հիշում են։ Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։<br><br>Մենք&nbsp;ենք մեր սարերը։',en:'The monasteries, the letters, the mountains — all remain in the memory of those who remember. Artsakh lives as long as its name is spoken.<br><br>We&nbsp;Are Our Mountains.'} },
+};
+function getLang(){ try{const s=localStorage.getItem('artsakh_lang'); if(s==='hy'||s==='ru'||s==='en')return s;}catch(e){} const n=(navigator.language||'ru').toLowerCase(); return n.startsWith('hy')?'hy':n.startsWith('en')?'en':'ru'; }
+function applyLang(l){
+  eras.forEach((era,i)=>{ const tr=TR[i]; if(!tr) return;
+    const set=(sel,v)=>{ const el=era.querySelector(sel); if(el&&v!=null) el.innerHTML=(v[l]!=null?v[l]:v.ru); };
+    set('h1',tr.h1); set('h2',tr.h2); set('.epoch',tr.epoch); set('.line',tr.line); set('.hint',tr.hint);
+  });
+  document.documentElement.lang=l;
+  document.querySelectorAll('#langs button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===l));
+}
+document.querySelectorAll('#langs button').forEach(b=>b.addEventListener('click',()=>{ const l=b.getAttribute('data-l'); try{localStorage.setItem('artsakh_lang',l);}catch(e){} applyLang(l); }));
+applyLang(getLang());
 
 /* ════════════ ЧАСТИЦЫ (атмосфера) ════════════ */
 const cv = document.getElementById('particles');
