@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Где это? · Карта Арцаха — игра</title>
+<meta name="theme-color" content="#0b0e18" />
+<meta name="description" content="Обучающая игра: найди святыни и города Арцаха на настоящей карте и узнай о них. На трёх языках." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🗺️%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{--bg:#0b0e18;--ink:#f4ecdc;--mut:#a9a392;--gold:#caa23f;--gold2:#e8b96a;--red:#d90012;--blue:#0033a0;--apr:#f2a800;--ok:#3fb56b;--serif:Georgia,'Times New Roman',serif;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden;}
+  .flagbar{position:fixed;top:0;left:0;right:0;height:4px;display:flex;z-index:1200;}
+  .flagbar i{flex:1;}.flagbar i:nth-child(1){background:var(--red);}.flagbar i:nth-child(2){background:var(--blue);}.flagbar i:nth-child(3){background:var(--apr);}
+  header{position:fixed;top:4px;left:0;right:0;height:54px;display:flex;align-items:center;gap:12px;padding:0 14px;background:rgba(11,14,24,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(202,162,63,.25);z-index:1100;}
+  .back{color:var(--gold2);text-decoration:none;font-family:var(--serif);font-size:14px;white-space:nowrap;border:1px solid rgba(232,185,106,.4);padding:6px 12px;border-radius:20px;transition:.2s;}
+  .back:hover{background:rgba(232,185,106,.12);}
+  .htitle{font-family:var(--serif);font-size:17px;color:var(--gold2);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .htitle .am{font-weight:700;}
+  .spacer{flex:1;}
+  .score{font-family:var(--serif);font-size:14px;color:var(--ink);white-space:nowrap;}
+  .score b{color:var(--gold2);}
+  .langs{display:flex;gap:4px;}
+  .langs button{font-family:var(--serif);font-size:11px;letter-spacing:.08em;color:var(--mut);background:transparent;border:1px solid rgba(169,163,146,.3);padding:5px 7px;border-radius:14px;cursor:pointer;transition:.15s;}
+  .langs button.on{color:var(--bg);background:var(--gold2);border-color:var(--gold2);font-weight:700;}
+  #map{position:fixed;top:58px;left:0;right:0;bottom:0;background:#0b0e18;cursor:crosshair;}
+  .leaflet-container{background:#0b0e18;}
+  .prompt{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:12px;background:rgba(16,20,32,.95);border:1px solid rgba(202,162,63,.45);border-radius:16px;padding:10px 16px 10px 10px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:92vw;}
+  .prompt img{width:58px;height:58px;object-fit:cover;border-radius:11px;flex:none;background:#222;}
+  .prompt .pt{font-family:var(--serif);}
+  .prompt .lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);}
+  .prompt .nm{font-size:19px;color:var(--gold2);line-height:1.15;}
+  .hint{position:fixed;top:140px;left:50%;transform:translateX(-50%);z-index:1000;font-size:12.5px;color:var(--mut);background:rgba(11,14,24,.7);padding:5px 12px;border-radius:12px;pointer-events:none;transition:.3s;}
+  .mk{width:15px;height:15px;border-radius:50%;background:var(--gold2);border:2px solid #fff;box-shadow:0 0 0 2px rgba(202,162,63,.6),0 2px 6px rgba(0,0,0,.6);}
+  .mk.real{background:var(--ok);}
+  .mk.guess{background:#e85d5d;}
+  .mk.learned{width:9px;height:9px;background:rgba(232,185,106,.6);border-color:rgba(255,255,255,.5);box-shadow:none;}
+  .lbl{font-family:var(--serif);font-size:12px;color:var(--gold2);text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;}
+  .sheet{position:fixed;left:50%;bottom:16px;transform:translateX(-50%) translateY(140%);z-index:1100;width:min(560px,94vw);background:rgba(16,20,32,.97);border:1px solid rgba(202,162,63,.45);border-radius:18px;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.6);transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+  .sheet.up{transform:translateX(-50%) translateY(0);}
+  .sheet .rrow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .sheet .fb{font-family:var(--serif);font-size:21px;color:var(--gold2);}
+  .sheet .dist{font-size:14px;color:var(--mut);}
+  .sheet .pts{margin-left:auto;font-family:var(--serif);font-size:20px;color:var(--ok);font-weight:700;}
+  .sheet .fact{margin-top:9px;font-size:14.5px;line-height:1.5;color:var(--ink);}
+  .sheet .fact b{color:var(--gold2);}
+  .btn{display:inline-block;margin-top:14px;font-family:var(--serif);font-size:15px;letter-spacing:.04em;color:var(--bg);background:linear-gradient(180deg,var(--gold2),var(--gold));border:none;padding:11px 26px;border-radius:24px;cursor:pointer;transition:.2s;font-weight:700;}
+  .btn:hover{filter:brightness(1.08);}
+  .btn.ghost{color:var(--gold2);background:transparent;border:1px solid rgba(232,185,106,.5);font-weight:400;}
+  .overlay{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;background:rgba(7,9,16,.93);backdrop-filter:blur(6px);padding:22px;}
+  .overlay.show{display:flex;}
+  .card{max-width:480px;text-align:center;}
+  .card .em{font-size:54px;}
+  .card h1{font-family:var(--serif);font-size:30px;color:var(--gold2);margin:8px 0 4px;font-weight:700;}
+  .card .big{font-family:var(--serif);font-size:46px;color:var(--ink);margin:10px 0;}
+  .card .big b{color:var(--gold2);}
+  .card p{color:var(--mut);font-size:15px;line-height:1.6;margin:10px 0;}
+  .card .best{color:var(--gold2);font-size:14px;}
+  .card .btn{margin:18px 8px 0;}
+  .intro h1{font-size:26px;}
+  @media(max-width:560px){ .htitle{font-size:14px;} .prompt .nm{font-size:17px;} .score{font-size:12px;} .back{font-size:12px;padding:5px 9px;} }
+</style>
+</head>
+<body>
+<div class="flagbar"><i></i><i></i><i></i></div>
+<header>
+  <a class="back" href="index.html">←&nbsp;<span data-t="back">Արцах</span></a>
+  <div class="htitle"><span class="am" lang="hy">Որտե՞ղ է</span> · <span data-t="title">Где это?</span></div>
+  <div class="spacer"></div>
+  <div class="score"><span data-t="round">Раунд</span> <b id="rnd">1</b>/<span id="tot">8</span> · <span data-t="pts">Очки</span> <b id="scr">0</b></div>
+  <div class="langs">
+    <button data-l="hy">ՀԱՅ</button><button data-l="ru">РУС</button><button data-l="en">ENG</button>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<div class="prompt" id="prompt" style="display:none">
+  <img id="pimg" alt="" />
+  <div class="pt"><div class="lab" data-t="find">Найди на карте</div><div class="nm" id="pname">—</div></div>
+</div>
+<div class="hint" id="hint" data-t="hint">Нажми на карту, где находится это место</div>
+
+<div class="sheet" id="sheet">
+  <div class="rrow"><span class="fb" id="fb">—</span><span class="dist" id="dist"></span><span class="pts" id="rpts">+0</span></div>
+  <div class="fact" id="fact"></div>
+  <button class="btn" id="next" data-t="next">Дальше →</button>
+</div>
+
+<div class="overlay intro show" id="intro">
+  <div class="card">
+    <div class="em">🗺️</div>
+    <h1 data-t="introH">Карта Арцаха</h1>
+    <p data-t="introP">Тебе показывают святыню или город Арцаха — найди его на настоящей карте. Чем точнее, тем больше очков. После каждого ответа узнаёшь, где это и что это. Так запоминаешь Арцах.</p>
+    <button class="btn" id="start" data-t="start">Начать</button>
+  </div>
+</div>
+
+<div class="overlay" id="final">
+  <div class="card">
+    <div class="em" id="fem">🏔️</div>
+    <h1 data-t="finalH">Игра пройдена!</h1>
+    <div class="big"><b id="ftot">0</b> / <span id="fmax">800</span></div>
+    <p id="fmsg"></p>
+    <div class="best"><span data-t="best">Рекорд</span>: <b id="fbest">0</b></div>
+    <button class="btn" id="again" data-t="again">Играть снова</button>
+    <a class="btn ghost" href="index.html" data-t="home">На главную</a>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ── места: координаты + название + факт (3 языка) + фото ── */
+const PLACES=[
+ {k:'gandzasar',img:'img/gandzasar.jpg',lat:40.0506,lon:46.5294,nm:{hy:'Գանձասար',ru:'Гандзасар',en:'Gandzasar'},f:{hy:'Արցախի գլխավոր վանքը (XIII դ.)՝ Հասան-Ջալալի կառուցած։',ru:'Главный монастырь Арцаха (XIII в.), построен Гасан-Джалалом.',en:'Artsakh’s main monastery (13th c.), built by Hasan-Jalal.'}},
+ {k:'dadivank',img:'img/dadivank.jpg',lat:40.1856,lon:46.2889,nm:{hy:'Դադիվանք',ru:'Дадиванк',en:'Dadivank'},f:{hy:'Արցախի խոշորագույն վանքերից (XIII դ.)՝ որմնանկարներով։',ru:'Один из крупнейших монастырей Арцаха (XIII в.) с фресками.',en:'One of Artsakh’s largest monasteries (13th c.), famed for frescoes.'}},
+ {k:'amaras',img:'img/amaras.jpg',lat:39.6817,lon:46.9989,nm:{hy:'Ամարաս',ru:'Амарас',en:'Amaras'},f:{hy:'IV դ. վանք. այստեղ էր հայ տառերով առաջին դպրոցը։',ru:'Монастырь IV в.; здесь была первая школа с армянским алфавитом.',en:'A 4th-c. monastery; site of the first Armenian-alphabet school.'}},
+ {k:'tigranakert',img:'img/tigranakert.jpg',lat:40.1869,lon:46.8347,nm:{hy:'Տիգրանակերտ',ru:'Тигранакерт',en:'Tigranakert'},f:{hy:'Հնագույն հայկական քաղաք՝ Տիգրան Մեծի ժամանակներից։',ru:'Древний армянский город времён Тиграна Великого.',en:'An ancient Armenian city from the era of Tigranes the Great.'}},
+ {k:'stepanakert',img:'img/stepanakert.jpg',lat:39.8154,lon:46.7528,nm:{hy:'Ստեփանակերտ',ru:'Степанакерт',en:'Stepanakert'},f:{hy:'Արցախի մայրաքաղաքը՝ հիմնադրված 1923-ին։',ru:'Столица Арцаха, основана как город в 1923 году.',en:'The capital of Artsakh, founded as a city in 1923.'}},
+ {k:'ghazan',img:'img/ghazan.jpg',lat:39.7589,lon:46.7461,nm:{hy:'Ղազանչեցոց (Շուշի)',ru:'Казанчецоц (Шуши)',en:'Ghazanchetsots (Shushi)'},f:{hy:'Շուշիի մայր տաճարը (1888)՝ քաղաքի խորհրդանիշը։',ru:'Кафедральный собор Шуши (1888), символ города.',en:'The cathedral of Shushi (1888), a symbol of the city.'}},
+ {k:'handaberd',img:'img/handaberd.jpg',lat:40.2269,lon:46.1378,nm:{hy:'Հանդաբերդ',ru:'Андаберд',en:'Handaberd'},f:{hy:'IX դ. լեռնային ամրոց Խաչենի իշխանությունում։',ru:'Горная крепость IX в. в княжестве Хачен.',en:'A 9th-c. mountain fortress in the principality of Khachen.'}},
+ {k:'vankasar',img:'img/vankasar.jpg',lat:40.0721,lon:46.8874,nm:{hy:'Վանքասար',ru:'Ванкасар',en:'Vankasar'},f:{hy:'VII դ. խաչաձև եկեղեցի՝ Տիգրանակերտի մոտ։',ru:'Крестообразная церковь VII в. близ Тигранакерта.',en:'A 7th-c. cruciform church near Tigranakert.'}},
+ {k:'sarsang',img:'img/sarsang.jpg',lat:40.0117,lon:46.3550,nm:{hy:'Սարսանգ',ru:'Сарсанг',en:'Sarsang'},f:{hy:'Ջրամբար Թարթառ գետի վրա (1976)։',ru:'Водохранилище на реке Тертер (1976).',en:'A reservoir on the Tartar river (1976).'}},
+ {k:'tsitsernavank',img:'img/tsitsernavank.jpeg',lat:39.6443,lon:46.4077,nm:{hy:'Ծիծեռնավանք',ru:'Цицернаванк',en:'Tsitsernavank'},f:{hy:'V–VI դդ. բազիլիկ՝ տարածաշրջանի հնագույն եկեղեցիներից։',ru:'Базилика V–VI вв. — одна из древнейших церквей края.',en:'A 5th–6th c. basilica, among the region’s oldest churches.'}},
+ {k:'gtchavank',img:'img/gtchavank.jpg',lat:39.5937,lon:46.9424,nm:{hy:'Գտչավանք',ru:'Гтчаванк',en:'Gtchavank'},f:{hy:'XIII դ. վանք պատմական Դիզակում։',ru:'Монастырь XIII в. в историческом Дизаке.',en:'A 13th-c. monastery in historic Dizak.'}},
+ {k:'askeran',img:'img/askeran.jpg',lat:39.9333,lon:46.8333,nm:{hy:'Մայրաբերդ (Ասկերան)',ru:'Аскеранская крепость',en:'Askeran Fortress'},f:{hy:'XVIII դ. ամրոց Քարքառի ափին՝ Շուշիի մատույցներին։',ru:'Крепость XVIII в. на реке Каркар, у подступов к Шуши.',en:'An 18th-c. fortress on the Karkar, guarding Shushi.'}},
+ {k:'jraberd',img:'img/jraberd.jpg',lat:40.2386,lon:46.6633,nm:{hy:'Ջրաբերդ',ru:'Джраберд',en:'Jraberd'},f:{hy:'Միջնադարյան ամրոց Թարթառի ափին։',ru:'Средневековая крепость на реке Тертер.',en:'A medieval fortress on the Tartar river.'}},
+ {k:'dizapayt',img:'img/dizapayt.jpg',lat:39.5027,lon:46.7925,nm:{hy:'Դիզափայտ',ru:'Дизапайт',en:'Dizapayt'},f:{hy:'Սուրբ լեռը (2478 մ)՝ գագաթին Կատարո վանքով։',ru:'Священная гора (2478 м) с монастырём Катаро на вершине.',en:'A sacred mountain (2478 m) crowned by Kataro monastery.'}},
+ {k:'martakert',img:'img/martakert.jpg',lat:40.2153,lon:46.8128,nm:{hy:'Մարտակերտ',ru:'Мартакерт',en:'Martakert'},f:{hy:'Արցախի հյուսիսի շրջանային կենտրոնը։',ru:'Районный центр на севере Арцаха.',en:'A district center in northern Artsakh.'}},
+ {k:'berdzor',img:'img/berdzor.jpg',lat:39.6385,lon:46.5476,nm:{hy:'Բերձոր',ru:'Бердзор',en:'Berdzor'},f:{hy:'Հայաստանն ու Արցախը կապող միջանցքի քաղաքը։',ru:'Город на коридоре, связывавшем Армению и Арцах.',en:'A town on the corridor linking Armenia and Artsakh.'}},
+ {k:'karvachar',img:'img/karvachar.jpg',lat:40.1083,lon:46.0428,nm:{hy:'Քարվաճառ',ru:'Карвачар',en:'Karvachar'},f:{hy:'Լեռնային քաղաք Թարթառի վերին ավազանում։',ru:'Горный город в верховьях Тертера.',en:'A mountain town in the upper Tartar basin.'}},
+ {k:'kanach_zham',img:'img/kanach_zham.jpg',lat:39.7625,lon:46.7436,nm:{hy:'Կանաչ ժամ',ru:'Канач жам (Шуши)',en:'Kanach Zham'},f:{hy:'Շուշիի «Կանաչ ժամ» եկեղեցին (1847)։',ru:'Шушинская церковь «Канач жам» (1847).',en:'The “Green Chapel” of Shushi (1847).'}},
+];
+
+const T={
+ hy:{back:'Արցախ',title:'Որտե՞ղ է',round:'Փուլ',pts:'Միավոր',find:'Գտի՛ր քարտեզի վրա',hint:'Սեղմի՛ր քարտեզին՝ որտեղ է այս վայրը',next:'Հաջորդը →',
+   introH:'Արցախի քարտեզը',introP:'Քեզ ցույց են տալիս Արցախի սրբավայր կամ քաղաք՝ գտի՛ր այն իրական քարտեզի վրա։ Որքան ճշգրիտ, այնքան շատ միավոր։ Ամեն պատասխանից հետո կիմանաս՝ որտեղ է և ի՛նչ է։ Այսպես կսովորես Արցախը։',start:'Սկսել',
+   finalH:'Խաղն ավարտվեց',best:'Ռեկորդ',again:'Նորից խաղալ',home:'Գլխավոր',
+   fb:['Ուղիղ տասը՛','Շատ մոտ է','Մոտ է','Հեռվում է','Բոլորովին այլ տեղ'],km:'կմ',
+   msg:['Դու Արցախը ճանաչում ես ափի պես։','Հիանալի՛ է. դու սովորում ես Արցախը։','Լավ սկիզբ է. խաղա՛ նորից՝ ավելի լավ իմանալու համար։']},
+ ru:{back:'Арцах',title:'Где это?',round:'Раунд',pts:'Очки',find:'Найди на карте',hint:'Нажми на карту, где находится это место',next:'Дальше →',
+   introH:'Карта Арцаха',introP:'Тебе показывают святыню или город Арцаха — найди его на настоящей карте. Чем точнее, тем больше очков. После каждого ответа узнаёшь, где это и что это. Так запоминаешь Арцах.',start:'Начать',
+   finalH:'Игра пройдена!',best:'Рекорд',again:'Играть снова',home:'На главную',
+   fb:['Точно в цель!','Очень близко','Близко','Далековато','Совсем не там'],km:'км',
+   msg:['Ты знаешь Арцах как свои пять пальцев!','Отлично — ты учишь Арцах.','Хорошее начало — сыграй ещё, чтобы узнать лучше.']},
+ en:{back:'Artsakh',title:'Where is it?',round:'Round',pts:'Score',find:'Find on the map',hint:'Tap the map where this place is',next:'Next →',
+   introH:'Map of Artsakh',introP:'You are shown a sacred site or town of Artsakh — find it on the real map. The closer you are, the more points. After each answer you learn where it is and what it is. That is how you learn Artsakh.',start:'Start',
+   finalH:'Game complete!',best:'Best',again:'Play again',home:'Home',
+   fb:['Bullseye!','Very close','Close','Far off','Totally elsewhere'],km:'km',
+   msg:['You know Artsakh like the back of your hand!','Great — you are learning Artsakh.','A good start — play again to learn it better.']},
+};
+
+const ROUNDS=8;
+let lang='ru', map, order=[], idx=0, score=0, answered=false, guessLayer, realLayer, lineLayer, learned;
+
+function getLang(){ try{return localStorage.getItem('artsakh_lang')||'';}catch(e){return '';} }
+function setLangStore(l){ try{localStorage.setItem('artsakh_lang',l);}catch(e){} }
+function getBest(){ try{return +localStorage.getItem('artsakh_map_best')||0;}catch(e){return 0;} }
+function setBest(v){ try{localStorage.setItem('artsakh_map_best',v);}catch(e){} }
+
+function applyT(){
+  document.querySelectorAll('[data-t]').forEach(el=>{ const k=el.getAttribute('data-t'); if(T[lang][k]!=null) el.textContent=T[lang][k]; });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('on', b.getAttribute('data-l')===lang));
+  $('#tot').textContent=ROUNDS;
+  if(curPlace) $('#pname').textContent=curPlace.nm[lang];
+}
+const $=s=>document.querySelector(s);
+
+/* haversine, км */
+function dist(a,b){const R=6371,r=x=>x*Math.PI/180;const dLat=r(b[0]-a[0]),dLon=r(b[1]-a[1]);
+  const s=Math.sin(dLat/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
+function points(d){ if(d<=4)return 100; if(d<=10)return 80; if(d<=20)return 60; if(d<=35)return 40; if(d<=60)return 20; return 5; }
+function fbIndex(d){ if(d<=4)return 0; if(d<=10)return 1; if(d<=20)return 2; if(d<=60)return 3; return 4; }
+
+function dot(cls){return L.divIcon({className:'',html:'<div class="mk '+cls+'"></div>',iconSize:[16,16],iconAnchor:[8,8]});}
+
+let curPlace=null;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function initMap(){
+  map=L.map('map',{zoomControl:true,attributionControl:false,minZoom:7,maxZoom:12,
+    maxBounds:[[38.8,45.2],[40.9,47.9]],maxBoundsViscosity:.8}).setView([39.86,46.55],8);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);
+  L.control.attribution({prefix:false}).addAttribution('© OpenStreetMap, © CARTO').addTo(map);
+  guessLayer=L.layerGroup().addTo(map); realLayer=L.layerGroup().addTo(map);
+  lineLayer=L.layerGroup().addTo(map); learned=L.layerGroup().addTo(map);
+  map.on('click',onGuess);
+}
+
+function startGame(){
+  order=shuffle(PLACES).slice(0,ROUNDS); idx=0; score=0; answered=false;
+  learned.clearLayers();
+  $('#scr').textContent=0;
+  $('#intro').classList.remove('show'); $('#final').classList.remove('show');
+  $('#prompt').style.display='flex';
+  setTimeout(()=>map.invalidateSize(),100);
+  showRound();
+}
+
+function showRound(){
+  answered=false; curPlace=order[idx];
+  guessLayer.clearLayers(); realLayer.clearLayers(); lineLayer.clearLayers();
+  $('#rnd').textContent=idx+1;
+  $('#pname').textContent=curPlace.nm[lang];
+  const im=$('#pimg'); im.src=curPlace.img; im.onerror=()=>{im.style.visibility='hidden';}; im.style.visibility='visible';
+  $('#sheet').classList.remove('up');
+  $('#hint').style.opacity='1';
+  map.setView([39.86,46.55],8,{animate:true});
+}
+
+function onGuess(e){
+  if(answered) return; answered=true;
+  $('#hint').style.opacity='0';
+  const g=[e.latlng.lat,e.latlng.lng], real=[curPlace.lat,curPlace.lon];
+  const d=dist(g,real), p=points(d);
+  score+=p; $('#scr').textContent=score;
+  L.marker(g,{icon:dot('guess')}).addTo(guessLayer);
+  L.marker(real,{icon:dot('real')}).addTo(realLayer);
+  L.marker(real,{icon:L.divIcon({className:'',html:'<div class="lbl">'+curPlace.nm[lang]+'</div>',iconSize:[10,10],iconAnchor:[-8,8]})}).addTo(realLayer);
+  L.polyline([g,real],{color:'#e8b96a',weight:2,dashArray:'5,7',opacity:.8}).addTo(lineLayer);
+  map.fitBounds(L.latLngBounds([g,real]).pad(.6),{maxZoom:11,animate:true});
+  // teaching: keep this place as a learned dot for the rest of the game
+  L.marker(real,{icon:dot('learned')}).addTo(learned);
+  // result sheet
+  $('#fb').textContent=T[lang].fb[fbIndex(d)];
+  $('#dist').textContent='≈ '+(d<10?d.toFixed(1):Math.round(d))+' '+T[lang].km;
+  $('#rpts').textContent='+'+p;
+  $('#fact').innerHTML='<b>'+curPlace.nm[lang]+'.</b> '+curPlace.f[lang];
+  $('#next').textContent = (idx>=ROUNDS-1) ? (lang==='hy'?'Արդյունք →':lang==='en'?'Result →':'Итог →') : T[lang].next;
+  setTimeout(()=>$('#sheet').classList.add('up'),350);
+}
+
+function nextRound(){
+  $('#sheet').classList.remove('up');
+  if(idx>=ROUNDS-1){ endGame(); return; }
+  idx++; setTimeout(showRound,250);
+}
+
+function endGame(){
+  $('#prompt').style.display='none';
+  const max=ROUNDS*100, best=Math.max(getBest(),score); setBest(best);
+  $('#ftot').textContent=score; $('#fmax').textContent=max; $('#fbest').textContent=best;
+  const r=score/max;
+  $('#fem').textContent = r>=.8?'🏆':r>=.5?'🎖️':'🗺️';
+  $('#fmsg').textContent = T[lang].msg[r>=.8?0:r>=.5?1:2];
+  $('#final').classList.add('show');
+}
+
+/* wire */
+document.querySelectorAll('.langs button').forEach(b=>b.addEventListener('click',()=>{ lang=b.getAttribute('data-l'); setLangStore(lang); applyT(); }));
+$('#start').addEventListener('click',startGame);
+$('#again').addEventListener('click',startGame);
+$('#next').addEventListener('click',nextRound);
+
+(function init(){
+  const s=getLang(); lang = (s==='hy'||s==='ru'||s==='en')?s:((navigator.language||'ru').toLowerCase().startsWith('hy')?'hy':(navigator.language||'ru').toLowerCase().startsWith('en')?'en':'ru');
+  initMap(); applyT(); $('#fbest') && ($('#fbest').textContent=getBest());
+})();
+</script>
+</body>
+</html>

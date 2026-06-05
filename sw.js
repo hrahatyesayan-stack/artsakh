@@ -1,7 +1,7 @@
 /* Արцախ · Artsakh — service worker (installable + offline) */
-const CACHE = 'artsakh-v2';
+const CACHE = 'artsakh-v3';
 const CORE = [
-  './', 'index.html', 'quiz.html', 'runner.html', 'story.html', '404.html',
+  './', 'index.html', 'quiz.html', 'runner.html', 'story.html', 'game-map.html', '404.html',
   'manifest.webmanifest', 'img/icon-192.png', 'img/icon-512.png', 'img/icon-maskable-512.png',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
