@@ -62,6 +62,8 @@
   .score-big { font-size:clamp(52px,12vw,118px); color:#f2c879; line-height:1; margin:4px 0 2px;
                text-shadow:0 4px 40px rgba(242,200,121,.25); }
   .sub { font-size:13px; letter-spacing:.25em; text-transform:uppercase; opacity:.6; }
+  /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
 </style>
 </head>
 <body>

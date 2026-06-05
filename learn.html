@@ -47,6 +47,8 @@
   .nav button:hover{background:rgba(232,185,106,.12);}
   .nav .ctr{font-family:var(--serif);color:var(--mut);font-size:14px;min-width:64px;}
   .nav .ctr b{color:var(--gold2);}
+  /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
 </style>
 </head>
 <body>

@@ -52,6 +52,8 @@
   .panel .best{color:var(--gold2);font-size:14px;}
   .btn2{font-family:var(--serif);font-size:15px;color:var(--bg);background:linear-gradient(180deg,var(--gold2),var(--gold));border:none;padding:11px 26px;border-radius:24px;cursor:pointer;font-weight:700;margin:16px 7px 0;text-decoration:none;display:inline-block;}
   .btn2.ghost{color:var(--gold2);background:transparent;border:1px solid rgba(232,185,106,.5);font-weight:400;}
+  /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
 </style>
 </head>
 <body>

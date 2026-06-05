@@ -156,6 +156,8 @@
          background: linear-gradient(90deg,#f2c879,#c0303a); z-index: 31; transition: width .25s; }
 
   @media (max-width:560px){ #dots{ right: 12px; } .epoch{ letter-spacing:.3em; } }
+  /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
 </style>
 </head>
 <body>
