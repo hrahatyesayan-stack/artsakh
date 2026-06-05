@@ -1,5 +1,5 @@
 /* Արцախ · Artsakh — service worker (installable + offline) */
-const CACHE = 'artsakh-v8';
+const CACHE = 'artsakh-v9';
 const CORE = [
   './', 'index.html', 'quiz.html', 'runner.html', 'story.html', 'game-map.html', 'memory-match.html', 'timeline-game.html', 'learn.html', 'guess.html', '404.html',
   'manifest.webmanifest', 'img/icon-192.png', 'img/icon-512.png', 'img/icon-maskable-512.png',

@@ -103,19 +103,24 @@
   .small { margin-top:16px; font-size:13px; letter-spacing:.08em; opacity:.55; }
   /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
   @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
+  #langs{position:fixed;right:14px;bottom:12px;z-index:9999;display:flex;gap:5px;}
+  #langs button{font-family:Georgia,serif;font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.22);padding:7px 9px;border-radius:16px;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:.15s;}
+  #langs button.on{color:#0b0e18;background:#f2c879;border-color:#f2c879;font-weight:700;}
+  #langs button:focus-visible{outline:2px solid #f2c879;outline-offset:2px;}
 </style>
 </head>
 <body>
 <a href="index.html" style="position:fixed;left:14px;bottom:12px;z-index:9999;font-family:Georgia,serif;font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.22);text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">← Արցախ</a>
+<div id="langs"><button data-l="hy">ՀԱՅ</button><button data-l="ru">РУС</button><button data-l="en">ENG</button></div>
 <div id="bg"></div>
 <div class="mountain m-far" id="mfar"></div>
 <div class="mountain m-near" id="mnear"></div>
 <canvas id="particles"></canvas>
 
 <div id="hud" class="hidden">
-  <div class="eralbl"><span id="eraName">—</span> <span class="num">· эпоха <span id="eraNum">1</span>/7</span></div>
+  <div class="eralbl"><span id="eraName">—</span> <span class="num">· <span data-t="eraHud">эпоха</span> <span id="eraNum">1</span>/<span id="eraTot">7</span></span></div>
   <div id="hearts">♥♥♥</div>
-  <div class="score">Очки<b id="score">0</b></div>
+  <div class="score"><span data-t="score">Очки</span><b id="score">0</b></div>
 </div>
 
 <!-- Карточка вопроса -->
@@ -132,10 +137,10 @@
 <!-- Старт -->
 <div class="screen" id="startScreen">
   <div class="am">Արցախ · Մենք ենք մեր սարերը</div>
-  <h1>Дорога сквозь века</h1>
-  <div class="desc">Викторина по истории Арцаха. Пройди 7 эпох — от первого имени в камне до наших дней. Отвечай верно, береги 3 жизни.</div>
-  <button class="btn" id="startBtn">Начать путь</button>
-  <div class="small">Ответ — мышь/тап или клавиши 1–4 · Enter — дальше</div>
+  <h1 data-t="startTitle">Дорога сквозь века</h1>
+  <div class="desc" data-t="startDesc">Викторина по истории Арцаха. Пройди 7 эпох — от первого имени в камне до наших дней. Отвечай верно, береги 3 жизни.</div>
+  <button class="btn" id="startBtn" data-t="startBtn">Начать путь</button>
+  <div class="small" data-t="startHint">Ответ — мышь/тап или клавиши 1–4 · Enter — дальше</div>
 </div>
 
 <!-- Заставка эпохи -->
@@ -144,36 +149,70 @@
   <div class="am" id="introAm"></div>
   <h2 id="introName"></h2>
   <div class="desc" id="introText"></div>
-  <button class="btn" id="introBtn">В путь →</button>
+  <button class="btn" id="introBtn" data-t="go">В путь →</button>
 </div>
 
 <!-- Поражение -->
 <div class="screen hidden" id="overScreen">
-  <div class="epoch">Путь прерван</div>
+  <div class="epoch" data-t="overTitle">Путь прерван</div>
   <div class="big" id="overScore">0</div>
   <div class="desc" id="overLine"></div>
   <div class="small" id="overBest"></div>
-  <button class="btn" id="overBtn">Пройти заново</button>
+  <button class="btn" id="overBtn" data-t="restart">Пройти заново</button>
 </div>
 
 <!-- Победа -->
 <div class="screen hidden" id="winScreen">
   <div class="am">Մենք ենք մեր սարերը 🇦🇲</div>
-  <h2>Ты прошёл всю историю Арцаха!</h2>
+  <h2 data-t="winTitle">Ты прошёл всю историю Арцаха!</h2>
   <div class="big" id="winScore">0</div>
   <div class="desc" id="winLine"></div>
   <div class="small" id="winBest"></div>
-  <button class="btn" id="winBtn">Пройти заново</button>
+  <button class="btn" id="winBtn" data-t="restart">Пройти заново</button>
 </div>
 
 <script>
 "use strict";
 const $ = id => document.getElementById(id);
 
+/* ════════════ ЯЗЫК (i18n) ════════════ */
+function getLang(){ try{const s=localStorage.getItem('artsakh_lang'); if(s==='hy'||s==='ru'||s==='en')return s;}catch(e){} const n=(navigator.language||'ru').toLowerCase(); return n.startsWith('hy')?'hy':n.startsWith('en')?'en':'ru'; }
+let lang=getLang();
+function setLang(l){ lang=l; try{localStorage.setItem('artsakh_lang',l);}catch(e){} }
+/* tr(): объект {ru,hy,en} → строка текущего языка; массив/строка → как есть (запас для непереведённого) */
+function tr(x){ return (x && typeof x==='object' && !Array.isArray(x)) ? (x[lang]!=null?x[lang]:x.ru) : x; }
+const UI = {
+  ru:{ eraHud:'эпоха', score:'Очки', startTitle:'Дорога сквозь века',
+    startDesc:'Викторина по истории Арцаха. Пройди 7 эпох — от первого имени в камне до наших дней. Отвечай верно, береги 3 жизни.',
+    startBtn:'Начать путь', startHint:'Ответ — мышь/тап или клавиши 1–4 · Enter — дальше',
+    go:'В путь →', next:'Дальше →', result:'Итог →', overTitle:'Путь прерван', restart:'Пройти заново', best:'Рекорд',
+    winTitle:'Ты прошёл всю историю Арцаха!', eraWord:'Эпоха', correct:'Верно!', wrong:'Не верно', streakWord:'серия',
+    tryAgain:'попробуй снова', winLine:'Пройдено 7 эпох, ~2700 лет истории.', bonusPre:' Бонус за жизни: +', newRecord:' Новый рекорд!' },
+  hy:{ eraHud:'դարաշրջան', score:'Միավոր', startTitle:'Ճանապարհ դարերի միջով',
+    startDesc:'Վիկտորինա Արցախի պատմությունից։ Անցի՛ր 7 դարաշրջան՝ քարի մեջ փորագրված առաջին անունից մինչև մեր օրերը։ Պատասխանի՛ր ճիշտ, պահպանի՛ր 3 կյանք։',
+    startBtn:'Սկսել ճանապարհը', startHint:'Պատասխան՝ մկնիկ/հպում կամ 1–4 ստեղներ · Enter՝ առաջ',
+    go:'Առա՛ջ →', next:'Հաջորդը →', result:'Արդյունք →', overTitle:'Ճանապարհն ընդհատվեց', restart:'Անցնել նորից', best:'Ռեկորդ',
+    winTitle:'Դու անցար Արցախի ողջ պատմությունը՛', eraWord:'Դարաշրջան', correct:'Ճիշտ է՛', wrong:'Սխալ', streakWord:'շարք',
+    tryAgain:'փորձի՛ր նորից', winLine:'Անցար 7 դարաշրջան՝ ~2700 տարվա պատմություն։', bonusPre:' Բոնուս կյանքերի համար՝ +', newRecord:' Նոր ռեկորդ՛' },
+  en:{ eraHud:'era', score:'Score', startTitle:'A Road Through the Ages',
+    startDesc:'A quiz on the history of Artsakh. Pass 7 eras — from the first name carved in stone to our own day. Answer correctly and guard your 3 lives.',
+    startBtn:'Begin the journey', startHint:'Answer — mouse/tap or keys 1–4 · Enter — next',
+    go:'Onward →', next:'Next →', result:'Result →', overTitle:'The road is broken', restart:'Play again', best:'Best',
+    winTitle:'You have walked all of Artsakh’s history!', eraWord:'Era', correct:'Correct!', wrong:'Wrong', streakWord:'streak',
+    tryAgain:'try again', winLine:'Seven eras, ~2700 years of history.', bonusPre:' Lives bonus: +', newRecord:' New record!' }
+};
+function t(k){ return (UI[lang]&&UI[lang][k]!=null)?UI[lang][k]:UI.ru[k]; }
+function applyChrome(){
+  document.querySelectorAll('[data-t]').forEach(el=>{ const k=el.getAttribute('data-t'); if(UI[lang][k]!=null) el.textContent=UI[lang][k]; });
+  const et=$('eraTot'); if(et) et.textContent=ERAS.length;
+  document.documentElement.lang=lang;
+  document.querySelectorAll('#langs button').forEach(b=>b.classList.toggle('on', b.getAttribute('data-l')===lang));
+}
+
 /* ════════════ КОНТЕНТ: ЭПОХИ И ВОПРОСЫ (история — настоящая) ════════════ */
 const ERAS = [
-  { name:'Древность', am:'Ուրտեխինի', epoch:'763 г. до н.э.', mode:'embers',
-    intro:'Первое имя этой земли, высеченное в камне.',
+  { name:{ru:'Древность',hy:'Հնություն',en:'Antiquity'}, am:'Ուրտեխինի', epoch:{ru:'763 г. до н.э.',hy:'Ք.ա. 763',en:'763 BC'}, mode:'embers',
+    intro:{ru:'Первое имя этой земли, высеченное в камне.',hy:'Այս հողի առաջին անունը՝ քարի մեջ փորագրված։',en:'The first name of this land, carved in stone.'},
     sky:'linear-gradient(180deg,#16204a 0%,#3b3d6e 45%,#e2a24c 100%)', mfar:'#2c3a64', mnear:'#141f3c',
     questions:[
       { q:'Как впервые назвали эту землю в надписи урартского царя Сардури II?', a:['Уртехини','Тигранакерт','Двин','Ани'], correct:0,
@@ -187,8 +226,8 @@ const ERAS = [
       { q:'Какая древняя порода лошадей — символ Арцаха, «края всадников»?', a:['Карабахская','Ахалтекинская','Арабская','Фризская'], correct:0,
         fact:'Карабахская лошадь — древняя порода Арцаха, края всадников.' },
     ] },
-  { name:'Свет письмён', am:'Ա · Բ · Գ · Դ', epoch:'≈ 410 год · Амарас', mode:'letters',
-    intro:'Здесь родилась армянская грамота Арцаха.',
+  { name:{ru:'Свет письмён',hy:'Գրերի լույս',en:'Light of letters'}, am:'Ա · Բ · Գ · Դ', epoch:{ru:'≈ 410 год · Амарас',hy:'≈ 410 · Ամարաս',en:'≈ 410 · Amaras'}, mode:'letters',
+    intro:{ru:'Здесь родилась армянская грамота Арцаха.',hy:'Այստեղ ծնվեց Արցախի հայ գիրը։',en:'Here the Armenian letters of Artsakh were born.'},
     sky:'radial-gradient(120% 90% at 50% 92%, #6e3f15 0%, #2c1a0c 45%, #120b06 100%)', mfar:'#2a1c11', mnear:'#160d07',
     questions:[
       { q:'Кто открыл в монастыре Амарас первую школу с армянскими буквами?', a:['Месроп Маштоц','Григор Лусаворич','Мовсес Хоренаци','Саак Партев'], correct:0,
@@ -198,8 +237,8 @@ const ERAS = [
       { q:'Кто основал монастырь Амарас ещё в IV веке?', a:['Григор Лусаворич','Месроп Маштоц','Гасан-Джалал','Царь Тигран'], correct:0,
         fact:'Монастырь основал Григор Лусаворич (Просветитель). Там же похоронен его внук — святой Григорис.' },
     ] },
-  { name:'Золотой век камня', am:'Գանձասար', epoch:'XIII век', mode:'pollen',
-    intro:'Камень расцвёл монастырями и хачкарами.',
+  { name:{ru:'Золотой век камня',hy:'Քարի ոսկե դար',en:'Golden age of stone'}, am:'Գանձասար', epoch:{ru:'XIII век',hy:'XIII դար',en:'13th century'}, mode:'pollen',
+    intro:{ru:'Камень расцвёл монастырями и хачкарами.',hy:'Քարը ծաղկեց վանքերով ու խաչքարերով։',en:'Stone blossomed into monasteries and khachkars.'},
     sky:'linear-gradient(180deg,#74b3da 0%,#a9d6c0 58%,#d6ecae 100%)', mfar:'#5c9560', mnear:'#3a6840',
     questions:[
       { q:'Какой князь построил монастырь Гандзасар (1216–1238)?', a:['Гасан-Джалал','Вачаган','Ашот','Смбат'], correct:0,
@@ -213,8 +252,8 @@ const ERAS = [
       { q:'Чем, кроме архитектуры, знаменит Дадиванк?', a:['Фресками XIII века','Золотыми куполами','Подземным городом','Маяком'], correct:0,
         fact:'В Дадиванке сохранились редкие армянские фрески XIII века.' },
     ] },
-  { name:'Стойкость', am:'Խամսայի մելիքություններ', epoch:'XV–XVIII вв.', mode:'leaves',
-    intro:'Пять княжеств хранили свободу в горах.',
+  { name:{ru:'Стойкость',hy:'Հաստատակամություն',en:'Resilience'}, am:'Խամսայի մելիքություններ', epoch:{ru:'XV–XVIII вв.',hy:'XV–XVIII դդ.',en:'15th–18th c.'}, mode:'leaves',
+    intro:{ru:'Пять княжеств хранили свободу в горах.',hy:'Հինգ մելիքություններ լեռներում պահեցին ազատությունը։',en:'Five principalities kept freedom in the mountains.'},
     sky:'linear-gradient(180deg,#9c4a25 0%,#c9712f 45%,#e8b34c 100%)', mfar:'#7a3a20', mnear:'#481f12',
     questions:[
       { q:'Как называлось объединение пяти армянских княжеств Арцаха?', a:['Меликства Хамсы','Союз гор','Великий дом','Пять врат'], correct:0,
@@ -224,8 +263,8 @@ const ERAS = [
       { q:'Что хранили меликства сквозь нашествия монголов, Тимура и империй?', a:['Самоуправление и веру','Золотые рудники','Морские пути','Военный флот'], correct:0,
         fact:'Меликства веками сохраняли армянское самоуправление и христианскую веру.' },
     ] },
-  { name:'«Мы — наши горы»', am:'Մենք ենք մեր սարերը', epoch:'1813 · 1923 · 1967', mode:'dust',
-    intro:'Дед и бабушка, выросшие прямо из родной земли.',
+  { name:{ru:'«Мы — наши горы»',hy:'«Մենք ենք մեր սարերը»',en:'“We Are Our Mountains”'}, am:'Մենք ենք մեր սարերը', epoch:{ru:'1813 · 1923 · 1967',hy:'1813 · 1923 · 1967',en:'1813 · 1923 · 1967'}, mode:'dust',
+    intro:{ru:'Дед и бабушка, выросшие прямо из родной земли.',hy:'Տատն ու պապը՝ բուսած հենց հայրենի հողից։',en:'A grandmother and grandfather, risen from their native earth.'},
     sky:'linear-gradient(180deg,#283050 0%,#5a4254 50%,#9c5a52 100%)', mfar:'#4a3640', mnear:'#2a1d22',
     questions:[
       { q:'Как в народе называют монумент «Мы — наши горы»?', a:['Татик у Папик','Мать-Армения','Стражи','Камни мира'], correct:0,
@@ -239,8 +278,8 @@ const ERAS = [
       { q:'Что изображено на гербе Республики Арцах?', a:['Монумент «Мы — наши горы»','Орёл','Гранат','Парусник'], correct:0,
         fact:'На гербе Арцаха — монумент «Татик у Папик» («Мы — наши горы»).' },
     ] },
-  { name:'Свобода и испытания', am:'Արցախի Հանրապետություն', epoch:'1988 — 2023', mode:'petals',
-    intro:'Республика Арцах: расцвет, любовь к дому — и утрата.',
+  { name:{ru:'Свобода и испытания',hy:'Ազատություն և փորձություններ',en:'Freedom and trials'}, am:'Արցախի Հանրապետություն', epoch:{ru:'1988 — 2023',hy:'1988 — 2023',en:'1988 — 2023'}, mode:'petals',
+    intro:{ru:'Республика Арцах: расцвет, любовь к дому — и утрата.',hy:'Արցախի Հանրապետություն՝ ծաղկում, տան սեր և կորուստ։',en:'The Republic of Artsakh: flourishing, love of home — and loss.'},
     sky:'linear-gradient(180deg,#2f6f9e 0%,#c98a4e 55%,#ecd49a 100%)', mfar:'#9a5f4a', mnear:'#5e3a30',
     questions:[
       { q:'В каком году провозгласили Нагорно-Карабахскую Республику (Арцах)?', a:['1991','1988','1994','2020'], correct:0,
@@ -258,8 +297,8 @@ const ERAS = [
       { q:'Кто был физиком и командиром, героем освобождения Арцаха?', a:['Леонид Азгалдян','Андраник Озанян','Гарегин Нжде','Вазген Саргсян'], correct:0,
         fact:'Леонид Азгалдян (1942–1992) — учёный и командир, герой освобождения Арцаха.' },
     ] },
-  { name:'Память', am:'Մենք ենք մեր սարերը', epoch:'навсегда', mode:'stars',
-    intro:'Арцах живёт, пока звучит его имя.',
+  { name:{ru:'Память',hy:'Հիշողություն',en:'Memory'}, am:'Մենք ենք մեր սարերը', epoch:{ru:'навсегда',hy:'հավերժ',en:'forever'}, mode:'stars',
+    intro:{ru:'Арцах живёт, пока звучит его имя.',hy:'Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։',en:'Artsakh lives as long as its name is spoken.'},
     sky:'linear-gradient(180deg,#060a1c 0%,#0e1530 55%,#1c2547 100%)', mfar:'#141c3a', mnear:'#0a0f22',
     questions:[
       { q:'Что означает фраза «Մենք ենք մեր սարերը»?', a:['«Мы — наши горы»','«Мы вернёмся»','«Свет в камне»','«Земля предков»'], correct:0,
@@ -305,7 +344,7 @@ function setEra(era){
   $('mfar').style.background=era.mfar;
   $('mnear').style.background=era.mnear;
   mode=era.mode;
-  $('eraName').textContent=era.name;
+  $('eraName').textContent=tr(era.name);
   $('eraNum').textContent=(eraIndex+1);
 }
 function updateHud(){
@@ -319,18 +358,22 @@ function startGame(){
   $('hud').classList.remove('hidden'); updateHud();
   showEraIntro();
 }
+function renderEraIntro(){
+  const era=ERAS[eraIndex];
+  $('introEpoch').textContent=tr(era.epoch);
+  $('introAm').textContent=era.am;
+  $('introName').textContent=t('eraWord')+' '+(eraIndex+1)+'. '+tr(era.name);
+  $('introText').textContent=tr(era.intro);
+}
 function showEraIntro(){
   qIndex=0;                       // новая эпоха всегда с первого вопроса
   const era=ERAS[eraIndex]; setEra(era); updateHud();
   hideScreens();
-  $('introEpoch').textContent=era.epoch;
-  $('introAm').textContent=era.am;
-  $('introName').textContent='Эпоха '+(eraIndex+1)+'. '+era.name;
-  $('introText').textContent=era.intro;
+  renderEraIntro();
   $('eraIntro').classList.remove('hidden');
 }
 function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i];arr[i]=arr[j];arr[j]=t; } return arr; }
-function prepare(q){ const correctText=q.a[q.correct]; const opts=shuffle(q.a.slice()); return {q:q.q, opts, correctIdx:opts.indexOf(correctText), fact:q.fact}; }
+function prepare(q){ const arr=tr(q.a); const correctText=arr[q.correct]; const opts=shuffle(arr.slice()); return {q:tr(q.q), opts, correctIdx:opts.indexOf(correctText), fact:tr(q.fact)}; }
 
 function showQuestion(){
   const era=ERAS[eraIndex]; setEra(era);
@@ -360,10 +403,10 @@ function answer(i){
   else { hearts--; streak=0; sndWrong(); if(hearts<=0) pendingOver=true; }
   updateHud();
 
-  $('fmark').textContent = ok ? (streak>=3?('Верно! 🔥 серия '+streak):'Верно!') : 'Не верно';
+  $('fmark').textContent = ok ? (streak>=3?(t('correct')+' 🔥 '+t('streakWord')+' '+streak):t('correct')) : t('wrong');
   $('fmark').className = ok ? 'ok' : 'no';
   $('ffact').textContent = current.fact;
-  $('nextBtn').textContent = pendingOver ? 'Итог →' : 'Дальше →';
+  $('nextBtn').textContent = pendingOver ? t('result') : t('next');
   $('feedback').classList.remove('hidden');
 }
 function next(){
@@ -373,21 +416,28 @@ function next(){
   if(qIndex < ERAS[eraIndex].questions.length){ showQuestion(); }
   else { eraIndex++; if(eraIndex < TOTAL_ERAS) showEraIntro(); else win(); }
 }
+function renderOver(){
+  $('overScore').textContent=score;
+  $('overLine').textContent=t('eraWord')+' '+(eraIndex+1)+': «'+tr(ERAS[eraIndex].name)+'» — '+t('tryAgain')+'.';
+  $('overBest').textContent=t('best')+': '+best;
+}
 function gameOver(){
   $('hud').classList.add('hidden'); hideScreens();
   if(score>best){ best=score; saveBest(best); }
-  $('overScore').textContent=score;
-  $('overLine').textContent='Ты дошёл до эпохи '+(eraIndex+1)+': «'+ERAS[eraIndex].name+'». История ждёт ещё раз.';
-  $('overBest').textContent='Рекорд: '+best;
+  renderOver();
   $('overScreen').classList.remove('hidden');
 }
-function win(){
-  const bonus=hearts*150; score+=bonus;
-  $('hud').classList.add('hidden'); hideScreens();
-  const record=score>best; if(record){ best=score; saveBest(best); }
+let winBonus=0, winRecord=false;
+function renderWin(){
   $('winScore').textContent=score;
-  $('winLine').textContent='Пройдено 7 эпох, ~2700 лет истории.' + (hearts>0?(' Бонус за жизни: +'+bonus+'.'):'') + (record?' Новый рекорд!':'');
-  $('winBest').textContent='Рекорд: '+best;
+  $('winLine').textContent=t('winLine') + (winBonus>0?(t('bonusPre')+winBonus+'.'):'') + (winRecord?t('newRecord'):'');
+  $('winBest').textContent=t('best')+': '+best;
+}
+function win(){
+  winBonus=hearts*150; score+=winBonus;
+  $('hud').classList.add('hidden'); hideScreens();
+  winRecord=score>best; if(winRecord){ best=score; saveBest(best); }
+  renderWin();
   $('winScreen').classList.remove('hidden');
 }
 
@@ -397,6 +447,17 @@ $('introBtn').addEventListener('click', ()=>{ sndClick(); showQuestion(); });
 $('nextBtn').addEventListener('click', next);
 $('overBtn').addEventListener('click', ()=>{ sndClick(); startGame(); });
 $('winBtn').addEventListener('click', ()=>{ sndClick(); startGame(); });
+
+/* ════════════ ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА ════════════ */
+function relayout(){
+  applyChrome();
+  setEra(ERAS[eraIndex]); updateHud();
+  if(!$('questionCard').classList.contains('hidden')) showQuestion();
+  else if(!$('eraIntro').classList.contains('hidden')) renderEraIntro();
+  else if(!$('overScreen').classList.contains('hidden')) renderOver();
+  else if(!$('winScreen').classList.contains('hidden')) renderWin();
+}
+document.querySelectorAll('#langs button').forEach(b=>b.addEventListener('click',()=>{ setLang(b.getAttribute('data-l')); relayout(); }));
 
 addEventListener('keydown', e=>{
   if(!$('startScreen').classList.contains('hidden')){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sndClick(); startGame(); } return; }
@@ -451,6 +512,7 @@ function ploop(){
 }
 // фон стартового экрана — рассвет
 setEra(ERAS[0]); $('eraNum').textContent='1';
+applyChrome();
 ploop();
 </script>
 </body>
