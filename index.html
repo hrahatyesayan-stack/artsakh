@@ -101,6 +101,8 @@
   .cta{display:inline-block;margin-top:34px;font-size:15px;letter-spacing:.16em;text-transform:uppercase;
     color:#1a1206;background:var(--gold2);padding:15px 32px;border-radius:40px;transition:.2s;box-shadow:0 12px 40px rgba(242,200,121,.28);}
   .cta:hover{transform:translateY(-2px);box-shadow:0 16px 50px rgba(242,200,121,.4);}
+  .cta.alt{background:transparent;color:var(--gold2);border:1px solid rgba(232,185,106,.6);box-shadow:none;margin-left:10px;}
+  .cta.alt:hover{background:rgba(232,185,106,.12);box-shadow:none;}
   .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;color:var(--muted);font-size:24px;animation:bob 2s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
 
@@ -293,6 +295,7 @@
     <div class="tag" data-i18n="hero_tag">Земля, высеченная в камне и хранимая в сердце</div>
     <div class="sub" data-i18n="hero_sub">История · Святыни · Культура · Память</div>
     <a class="cta" href="quiz.html" data-i18n="hero_cta">Играть в викторину</a>
+    <a class="cta alt" href="game-map.html" data-i18n="hero_cta2">Где это? Карта</a>
   </div>
   <div class="scrollcue">↓</div>
 </header>
@@ -588,7 +591,7 @@ Object.keys(IMG).forEach(k=>{
 /* ── Тексты интерфейса (3 языка) ── */
 const T = {
   hy:{ skip:'Անցնել բովանդակությանը', nav_history:'Պատմություն', nav_holy:'Սրբավայրեր', nav_culture:'Մշակույթ', nav_play:'Խաղեր', nav_memory:'Հիշողություն',
-    hero_tag:'Քարի մեջ փորագրված, սրտում պահված երկիր', hero_sub:'Պատմություն · Սրբավայրեր · Մշակույթ · Հիշողություն', hero_cta:'Խաղալ վիկտորինան',
+    hero_tag:'Քարի մեջ փորագրված, սրտում պահված երկիր', hero_sub:'Պատմություն · Սրբավայրեր · Մշակույթ · Հիշողություն', hero_cta:'Խաղալ վիկտորինան', hero_cta2:'Որտե՞ղ է. Քարտեզ',
     history_eyebrow:'2700 տարի', history_h:'Արցախի պատմությունը', history_lead:'Քարին փորագրված առաջին անունից մինչև մեր օրերը՝ մեկ հողի յոթ դարաշրջան։',
     holy_eyebrow:'Քար և հավատ', holy_h:'Սրբավայրեր', holy_lead:'Վանքեր, ամրոցներ և քաղաքներ, որ դարեր շարունակ պահել են Արցախի ոգին։',
     culture_eyebrow:'Ժողովրդի հոգին', culture_h:'Մշակույթ', culture_lead:'Տառեր, երաժշտություն և խորհրդանիշներ, որոնցում ապրում է Արցախը։',
@@ -601,7 +604,7 @@ const T = {
     nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։', towns_eyebrow:'Հողն ու մարդիկ', towns_h:'Քաղաքներ ու գյուղեր', towns_lead:'Քաղաքներ ու գյուղեր, որտեղ բաբախում է Արցախի սիրտը։',
     footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը' },
   ru:{ skip:'Перейти к содержанию', nav_history:'История', nav_holy:'Святыни', nav_culture:'Культура', nav_play:'Игры', nav_memory:'Память',
-    hero_tag:'Земля, высеченная в камне и хранимая в сердце', hero_sub:'История · Святыни · Культура · Память', hero_cta:'Играть в викторину',
+    hero_tag:'Земля, высеченная в камне и хранимая в сердце', hero_sub:'История · Святыни · Культура · Память', hero_cta:'Играть в викторину', hero_cta2:'Где это? Карта',
     history_eyebrow:'2700 лет', history_h:'История Арцаха', history_lead:'От первого имени, высеченного в камне, до наших дней — семь эпох одной земли.',
     holy_eyebrow:'Камень и вера', holy_h:'Святыни', holy_lead:'Монастыри, крепости и города, что веками хранили дух Арцаха.',
     culture_eyebrow:'Душа народа', culture_h:'Культура', culture_lead:'Буквы, музыка и символы, в которых живёт Арцах.',
@@ -614,7 +617,7 @@ const T = {
     nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.', towns_eyebrow:'Земля и люди', towns_h:'Города и сёла', towns_lead:'Города и сёла, где бьётся сердце Арцаха.',
     footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение' },
   en:{ skip:'Skip to content', nav_history:'History', nav_holy:'Sacred sites', nav_culture:'Culture', nav_play:'Games', nav_memory:'Memory',
-    hero_tag:'A land carved in stone, kept in the heart', hero_sub:'History · Sacred sites · Culture · Memory', hero_cta:'Play the quiz',
+    hero_tag:'A land carved in stone, kept in the heart', hero_sub:'History · Sacred sites · Culture · Memory', hero_cta:'Play the quiz', hero_cta2:'Where is it? Map',
     history_eyebrow:'2700 years', history_h:'History of Artsakh', history_lead:'From the first name carved in stone to our own day — seven eras of one land.',
     holy_eyebrow:'Stone and faith', holy_h:'Sacred sites', holy_lead:'Monasteries, fortresses and cities that kept the spirit of Artsakh for centuries.',
     culture_eyebrow:'Soul of a people', culture_h:'Culture', culture_lead:'Letters, music and symbols in which Artsakh lives on.',
