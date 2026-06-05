@@ -1224,6 +1224,10 @@ const FACTS=[
   {hy:'Ժենգյալով հացը Արցախի խորհրդանշական հացն է՝ տասնյակ խոտաբույսերով։',ru:'Женгялов хац — символичный хлеб Арцаха с десятками трав.',en:'Jingalov hats is Artsakh’s signature bread filled with dozens of herbs.'},
   {hy:'Տնջրի սոսին մոտ 2000 տարեկան է։',ru:'Платану Тнджри около 2000 лет.',en:'The Tnjri plane tree is about 2000 years old.'},
   {hy:'«Մենք ենք մեր սարերը» հուշարձանը պատկերված է Արցախի զինանշանին։',ru:'Монумент «Мы — наши горы» изображён на гербе Арцаха.',en:'The “We Are Our Mountains” monument appears on Artsakh’s coat of arms.'},
+  {hy:'Արցախի Տիգրանակերտը հիմնադրվել է Տիգրան Մեծի դարաշրջանում (մ.թ.ա. I դ.)։',ru:'Тигранакерт в Арцахе основан в эпоху Тиграна Великого (I в. до н.э.).',en:'Tigranakert of Artsakh was founded in the era of Tigranes the Great (1st c. BC).'},
+  {hy:'Քոչարի պարն ընդգրկված է ՅՈՒՆԵՍԿՕ-ի ոչ նյութական ժառանգության ցանկում։',ru:'Танец кочари — в списке нематериального наследия ЮНЕСКО.',en:'The Kochari dance is on the UNESCO Intangible Heritage list.'},
+  {hy:'Խաչքարերը՝ հայկական խաչ-քարերը, ընդգրկված են ՅՈՒՆԵՍԿՕ-ի ժառանգության մեջ։',ru:'Хачкары — армянские кресты-камни — внесены в наследие ЮНЕСКО.',en:'Khachkars — Armenian cross-stones — are inscribed on the UNESCO heritage list.'},
+  {hy:'Դադիվանքը պահպանել է XIII դարի հազվագյուտ հայկական որմնանկարներ։',ru:'Дадиванк сохранил редкие армянские фрески XIII века.',en:'Dadivank preserves rare 13th-century Armenian frescoes.'},
 ];
 function showFact(lang){ const el=$('#dykText'); if(!el) return; el.style.opacity='0'; setTimeout(()=>{ el.textContent=FACTS[dykI%FACTS.length][lang]; el.style.opacity='1'; },300); }
 if(!dykTimer) dykTimer=setInterval(()=>{ dykI++; showFact(curLang); }, 6500);
