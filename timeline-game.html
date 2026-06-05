@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Лента времени · История Арцаха — игра</title>
+<meta name="theme-color" content="#0b0e18" />
+<meta name="description" content="Обучающая игра: расставь события истории Арцаха в правильном порядке и узнай даты и факты. На трёх языках." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⏳%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{--bg:#0b0e18;--ink:#f4ecdc;--mut:#a9a392;--gold:#caa23f;--gold2:#e8b96a;--red:#d90012;--blue:#0033a0;--apr:#f2a800;--ok:#3fb56b;--bad:#e0613f;--serif:Georgia,'Times New Roman',serif;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{min-height:100vh;background:radial-gradient(1100px 650px at 50% -10%,#141a2c,#0b0e18 60%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+  .flagbar{position:fixed;top:0;left:0;right:0;height:4px;display:flex;z-index:1200;}
+  .flagbar i{flex:1;}.flagbar i:nth-child(1){background:var(--red);}.flagbar i:nth-child(2){background:var(--blue);}.flagbar i:nth-child(3){background:var(--apr);}
+  header{position:sticky;top:0;display:flex;align-items:center;gap:10px;padding:12px 14px 10px;background:linear-gradient(180deg,rgba(11,14,24,.96),rgba(11,14,24,.7));backdrop-filter:blur(8px);z-index:1100;flex-wrap:wrap;}
+  .back{color:var(--gold2);text-decoration:none;font-family:var(--serif);font-size:14px;white-space:nowrap;border:1px solid rgba(232,185,106,.4);padding:6px 12px;border-radius:20px;transition:.2s;}
+  .back:hover{background:rgba(232,185,106,.12);}
+  .htitle{font-family:var(--serif);font-size:17px;color:var(--gold2);letter-spacing:.03em;}
+  .spacer{flex:1;}
+  .stat{font-family:var(--serif);font-size:14px;color:var(--ink);white-space:nowrap;}
+  .stat b{color:var(--gold2);}
+  .langs{display:flex;gap:4px;}
+  .langs button{font-family:var(--serif);font-size:11px;letter-spacing:.08em;color:var(--mut);background:transparent;border:1px solid rgba(169,163,146,.3);padding:5px 7px;border-radius:14px;cursor:pointer;transition:.15s;}
+  .langs button.on{color:var(--bg);background:var(--gold2);border-color:var(--gold2);font-weight:700;}
+  .wrap{max-width:600px;margin:0 auto;padding:12px 14px 40px;}
+  .lead{text-align:center;color:var(--mut);font-size:14px;line-height:1.5;margin:4px auto 14px;max-width:520px;}
+  .ends{display:flex;justify-content:space-between;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:2px 4px;}
+  .line{min-height:54px;display:flex;flex-direction:column;gap:8px;padding:8px;border:1px dashed rgba(202,162,63,.35);border-radius:14px;background:rgba(202,162,63,.04);}
+  .line:empty::after{content:attr(data-empty);color:var(--mut);font-size:13px;text-align:center;padding:12px;display:block;}
+  .pool{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+  .poolLab{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 4px 2px;}
+  .ev{display:flex;align-items:center;gap:11px;background:#121726;border:1px solid rgba(202,162,63,.4);border-radius:12px;padding:11px 13px;cursor:pointer;transition:.15s;text-align:left;}
+  .ev:hover{border-color:var(--gold2);background:#161c2e;}
+  .ev .em{font-size:23px;flex:none;width:30px;text-align:center;}
+  .ev .num{font-family:var(--serif);font-weight:700;color:var(--gold2);flex:none;width:18px;}
+  .ev .tt{font-size:14.5px;line-height:1.3;}
+  .ev .dt{margin-left:auto;font-family:var(--serif);color:var(--gold2);font-size:14px;opacity:0;transition:.3s;white-space:nowrap;}
+  .ev.show .dt{opacity:1;}
+  .ev.ok{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok);}
+  .ev.no{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad);}
+  .btn{display:block;width:100%;font-family:var(--serif);font-size:16px;letter-spacing:.04em;color:var(--bg);background:linear-gradient(180deg,var(--gold2),var(--gold));border:none;padding:13px;border-radius:26px;cursor:pointer;transition:.2s;font-weight:700;margin-top:16px;}
+  .btn:hover{filter:brightness(1.08);}
+  .btn:disabled{opacity:.4;cursor:default;filter:none;}
+  .reveal{margin-top:16px;display:none;}
+  .reveal.show{display:block;}
+  .rhead{font-family:var(--serif);color:var(--gold2);font-size:16px;margin-bottom:8px;text-align:center;}
+  .ritem{display:flex;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(202,162,63,.15);}
+  .ritem .em{font-size:20px;flex:none;}
+  .ritem .rb{font-family:var(--serif);color:var(--gold2);font-size:13.5px;}
+  .ritem .rf{color:var(--mut);font-size:13px;line-height:1.45;margin-top:2px;}
+  .overlay{position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;background:rgba(7,9,16,.93);backdrop-filter:blur(6px);padding:22px;}
+  .overlay.show{display:flex;}
+  .panel{max-width:440px;text-align:center;}
+  .panel .em{font-size:54px;}
+  .panel h1{font-family:var(--serif);font-size:27px;color:var(--gold2);margin:8px 0 6px;font-weight:700;}
+  .panel p{color:var(--mut);font-size:15px;line-height:1.6;margin:8px 0;}
+  .panel .big{font-family:var(--serif);font-size:40px;color:var(--ink);margin:8px 0;}
+  .panel .big b{color:var(--gold2);}
+  .panel .best{color:var(--gold2);font-size:14px;}
+  .btn2{display:inline-block;font-family:var(--serif);font-size:15px;color:var(--bg);background:linear-gradient(180deg,var(--gold2),var(--gold));border:none;padding:11px 26px;border-radius:24px;cursor:pointer;font-weight:700;margin:16px 7px 0;text-decoration:none;}
+  .btn2.ghost{color:var(--gold2);background:transparent;border:1px solid rgba(232,185,106,.5);font-weight:400;}
+</style>
+</head>
+<body>
+<div class="flagbar"><i></i><i></i><i></i></div>
+<header>
+  <a class="back" href="index.html">←&nbsp;<span data-t="back">Արцах</span></a>
+  <div class="htitle" data-t="title">Лента времени</div>
+  <div class="spacer"></div>
+  <div class="stat"><span data-t="round">Раунд</span> <b id="rnd">1</b>/<span id="tot">4</span> · <span data-t="pts">Очки</span> <b id="scr">0</b></div>
+  <div class="langs"><button data-l="hy">ՀԱՅ</button><button data-l="ru">РУС</button><button data-l="en">ENG</button></div>
+</header>
+
+<div class="wrap">
+  <p class="lead" data-t="lead">Расставь события истории Арцаха по порядку — от самого древнего к новому. Нажимай карточки снизу. Потом проверь и узнай даты и факты.</p>
+  <div class="ends"><span data-t="older">↑ Раньше</span><span data-t="newer">Позже ↓</span></div>
+  <div class="line" id="line" data-empty="Нажми события внизу по порядку"></div>
+  <div class="pool">
+    <div class="poolLab" data-t="poolLab">События (вперемешку):</div>
+    <div id="pool"></div>
+  </div>
+  <button class="btn" id="check" disabled data-t="check">Проверить</button>
+  <div class="reveal" id="reveal">
+    <div class="rhead" data-t="correct">Правильный порядок:</div>
+    <div id="rlist"></div>
+    <button class="btn" id="next" data-t="next">Дальше →</button>
+  </div>
+</div>
+
+<div class="overlay" id="intro">
+  <div class="panel">
+    <div class="em">⏳</div>
+    <h1 data-t="introH">Лента времени</h1>
+    <p data-t="introP">Тебе дают события из истории Арцаха вперемешку. Расставь их по порядку — от древности к нашим дням. После каждого раунда узнаёшь точные даты и что произошло. Так запоминаешь историю Арцаха.</p>
+    <button class="btn2" id="start" data-t="start">Начать</button>
+  </div>
+</div>
+
+<div class="overlay" id="final">
+  <div class="panel">
+    <div class="em" id="fem">🏆</div>
+    <h1 data-t="finalH">Готово!</h1>
+    <div class="big"><b id="ftot">0</b> / <span id="fmax">16</span></div>
+    <p id="fmsg"></p>
+    <div class="best"><span data-t="best">Рекорд</span>: <b id="fbest">0</b></div>
+    <button class="btn2" id="again" data-t="again">Играть снова</button>
+    <a class="btn2 ghost" href="index.html" data-t="home">На главную</a>
+  </div>
+</div>
+
+<script>
+/* ── вехи истории Арцаха: y=год для сортировки ── */
+const EVENTS=[
+ {k:'first',y:-763,em:'🪨',d:{hy:'Ք.ա. 763',ru:'763 до н.э.',en:'763 BC'},t:{hy:'Առաջին հիշատակումը',ru:'Первое упоминание',en:'First mention'},f:{hy:'Ուրարտու Սարդուրի II արքան հիշատակում է Ուրտեխինի երկիրը։',ru:'Урартский царь Сардури II упоминает страну Уртехини.',en:'The Urartian king Sarduri II mentions the land of Urtekhini.'}},
+ {k:'christ',y:301,em:'✝️',d:{hy:'301',ru:'301',en:'301'},t:{hy:'Քրիստոնեության ընդունումը',ru:'Принятие христианства',en:'Adoption of Christianity'},f:{hy:'Հայաստանն Արցախով առաջինն է ընդունում քրիստոնեությունը որպես պետական կրոն։',ru:'Армения с Арцахом первой принимает христианство как государственную религию.',en:'Armenia, with Artsakh, is the first to adopt Christianity as a state religion.'}},
+ {k:'alpha',y:405,em:'📜',d:{hy:'≈405',ru:'≈405',en:'≈405'},t:{hy:'Հայոց այբուբենը',ru:'Армянский алфавит',en:'The Armenian alphabet'},f:{hy:'Մեսրոպ Մաշտոցը ստեղծում է այբուբենը. առաջին դպրոցը՝ Ամարասում։',ru:'Месроп Маштоц создаёт алфавит; первая школа — в Амарасе.',en:'Mesrop Mashtots creates the alphabet; the first school is at Amaras.'}},
+ {k:'gandzasar',y:1238,em:'🏛️',d:{hy:'1238',ru:'1238',en:'1238'},t:{hy:'Կառուցվում է Գանձասարը',ru:'Построен Гандзасар',en:'Gandzasar is built'},f:{hy:'Հասան-Ջալալ իշխանն ավարտում է Գանձասար վանքը։',ru:'Князь Гасан-Джалал завершает монастырь Гандзасар.',en:'Prince Hasan-Jalal completes the Gandzasar monastery.'}},
+ {k:'meliks',y:1650,em:'🛡️',d:{hy:'XVII դ.',ru:'XVII в.',en:'17th c.'},t:{hy:'Հինգ մելիքություններ',ru:'Пять меликств',en:'The Five Melikdoms'},f:{hy:'Խամսայի հայկական մելիքությունները պահպանում են Արցախի ինքնավարությունը։',ru:'Армянские меликства Хамсы хранят самоуправление Арцаха.',en:'The Armenian melikdoms of Khamsa preserve Artsakh’s self-rule.'}},
+ {k:'gulistan',y:1813,em:'📃',d:{hy:'1813',ru:'1813',en:'1813'},t:{hy:'Գյուլիստանի պայմանագիր',ru:'Гюлистанский договор',en:'Treaty of Gulistan'},f:{hy:'Ղարաբաղն անցնում է Ռուսական կայսրությանը։',ru:'Карабах переходит к Российской империи.',en:'Karabakh passes to the Russian Empire.'}},
+ {k:'stepanakert',y:1923,em:'🏙️',d:{hy:'1923',ru:'1923',en:'1923'},t:{hy:'Հիմնադրվում է Ստեփանակերտը',ru:'Основан Степанакерт',en:'Stepanakert is founded'},f:{hy:'Ստեղծվում է Լեռնային Ղարաբաղի ինքնավար մարզը։',ru:'Создаётся Нагорно-Карабахская автономная область.',en:'The Nagorno-Karabakh Autonomous Oblast is created.'}},
+ {k:'independ',y:1991,em:'🕊️',d:{hy:'1991',ru:'1991',en:'1991'},t:{hy:'ԼՂՀ հռչակումը',ru:'Провозглашение НКР',en:'NKR is proclaimed'},f:{hy:'Հռչակվում է Լեռնային Ղարաբաղի Հանրապետությունը։',ru:'Провозглашается Нагорно-Карабахская Республика.',en:'The Nagorno-Karabakh Republic is proclaimed.'}},
+ {k:'war2020',y:2020,em:'⚔️',d:{hy:'2020',ru:'2020',en:'2020'},t:{hy:'44-օրյա պատերազմ',ru:'44-дневная война',en:'The 44-day war'},f:{hy:'2020-ի աշնանը տեղի է ունենում Արցախի համար ծանր պատերազմ։',ru:'Осенью 2020 года происходит тяжёлая война за Арцах.',en:'In autumn 2020 a grievous war for Artsakh takes place.'}},
+ {k:'exodus',y:2023,em:'🕯️',d:{hy:'2023',ru:'2023',en:'2023'},t:{hy:'Բռնագաղթ',ru:'Исход',en:'The exodus'},f:{hy:'2023-ի սեպտեմբերին Արցախը լքում է ավելի քան 100 000 մարդ։',ru:'В сентябре 2023 года Арцах покидают более 100 000 человек.',en:'In September 2023, over 100,000 people leave Artsakh.'}},
+];
+
+const T={
+ hy:{back:'Արցախ',title:'Ժամանակի գիծ',round:'Փուլ',pts:'Միավոր',older:'↑ Ավելի վաղ',newer:'Ավելի ուշ ↓',poolLab:'Իրադարձություններ (խառը)՝',check:'Ստուգել',correct:'Ճիշտ հերթականությունը՝',next:'Հաջորդը →',
+  introH:'Ժամանակի գիծ',introP:'Քեզ տալիս են Արցախի պատմության իրադարձությունները խառը։ Դասավորի՛ր ըստ ժամանակի՝ հնից մինչև մեր օրերը։ Ամեն փուլից հետո կիմանաս ճշգրիտ թվականներն ու ի՛նչ է եղել։ Այսպես կսովորես Արցախի պատմությունը։',start:'Սկսել',
+  finalH:'Պատրա՛ստ է',best:'Ռեկորդ',again:'Նորից խաղալ',home:'Գլխավոր',empty:'Սեղմի՛ր ներքևի իրադարձությունները հերթով',
+  msg:['Դու Արցախի պատմությունը գիտես հիանալի՛։','Լավ է. դու սովորում ես Արցախի պատմությունը։','Փորձի՛ր նորից՝ հերթականությունը հիշելու համար։']},
+ ru:{back:'Арцах',title:'Лента времени',round:'Раунд',pts:'Очки',older:'↑ Раньше',newer:'Позже ↓',poolLab:'События (вперемешку):',check:'Проверить',correct:'Правильный порядок:',next:'Дальше →',
+  introH:'Лента времени',introP:'Тебе дают события из истории Арцаха вперемешку. Расставь их по порядку — от древности к нашим дням. После каждого раунда узнаёшь точные даты и что произошло. Так запоминаешь историю Арцаха.',start:'Начать',
+  finalH:'Готово!',best:'Рекорд',again:'Играть снова',home:'На главную',empty:'Нажми события внизу по порядку',
+  msg:['Ты знаешь историю Арцаха на отлично!','Хорошо — ты учишь историю Арцаха.','Сыграй ещё, чтобы запомнить последовательность.']},
+ en:{back:'Artsakh',title:'Timeline',round:'Round',pts:'Score',older:'↑ Earlier',newer:'Later ↓',poolLab:'Events (shuffled):',check:'Check',correct:'Correct order:',next:'Next →',
+  introH:'Timeline',introP:'You are given events from Artsakh’s history, shuffled. Put them in order — from antiquity to our own day. After each round you learn the exact dates and what happened. That is how you learn Artsakh’s history.',start:'Start',
+  finalH:'Done!',best:'Best',again:'Play again',home:'Home',empty:'Tap the events below in order',
+  msg:['You know Artsakh’s history brilliantly!','Good — you are learning Artsakh’s history.','Play again to remember the sequence.']},
+};
+
+const ROUNDS=4, SIZE=5;
+let lang='ru', roundSet=[], placed=[], rnd=0, score=0, checked=false;
+
+function getLang(){try{return localStorage.getItem('artsakh_lang')||'';}catch(e){return '';}}
+function setLangStore(l){try{localStorage.setItem('artsakh_lang',l);}catch(e){}}
+function getBest(){try{return +localStorage.getItem('artsakh_time_best')||0;}catch(e){return 0;}}
+function setBest(v){try{localStorage.setItem('artsakh_time_best',v);}catch(e){}}
+const $=s=>document.querySelector(s);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function applyT(){
+  document.querySelectorAll('[data-t]').forEach(el=>{const k=el.getAttribute('data-t');if(T[lang][k]!=null)el.textContent=T[lang][k];});
+  document.documentElement.lang=lang;
+  document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lang));
+  $('#line').setAttribute('data-empty',T[lang].empty);
+  $('#tot').textContent=ROUNDS;
+  if(roundSet.length) render();
+}
+
+function startGame(){ rnd=0; score=0; $('#scr').textContent=0; $('#intro').classList.remove('show'); $('#final').classList.remove('show'); newRound(); }
+function newRound(){
+  roundSet=shuffle(EVENTS).slice(0,SIZE); placed=[]; checked=false;
+  $('#rnd').textContent=rnd+1;
+  $('#reveal').classList.remove('show'); $('#check').style.display='block';
+  $('#check').disabled=true; $('#check').textContent=T[lang].check;
+  render();
+}
+
+function render(){
+  const line=$('#line'), pool=$('#pool');
+  line.innerHTML=''; pool.innerHTML='';
+  placed.forEach((e,i)=>{
+    const el=evEl(e,i+1);
+    if(checked){ const correct=roundSet.slice().sort((a,b)=>a.y-b.y); el.classList.add(correct[i].k===e.k?'ok':'no','show'); }
+    else el.addEventListener('click',()=>{ if(checked)return; placed.splice(i,1); render(); checkReady(); });
+    line.appendChild(el);
+  });
+  roundSet.filter(e=>!placed.includes(e)).forEach(e=>{
+    const el=evEl(e,null); el.addEventListener('click',()=>{ if(checked)return; placed.push(e); render(); checkReady(); });
+    pool.appendChild(el);
+  });
+}
+function evEl(e,num){
+  const el=document.createElement('button'); el.className='ev'; el.type='button';
+  el.innerHTML=(num?'<span class="num">'+num+'</span>':'')+'<span class="em">'+e.em+'</span><span class="tt">'+e.t[lang]+'</span><span class="dt">'+e.d[lang]+'</span>';
+  return el;
+}
+function checkReady(){ $('#check').disabled = placed.length!==roundSet.length; }
+
+function doCheck(){
+  if(placed.length!==roundSet.length) return;
+  checked=true;
+  const correct=roundSet.slice().sort((a,b)=>a.y-b.y);
+  let right=0; placed.forEach((e,i)=>{ if(correct[i].k===e.k) right++; });
+  score+=right; $('#scr').textContent=score;
+  render();
+  // reveal correct order with dates + facts
+  const rl=$('#rlist'); rl.innerHTML='';
+  correct.forEach(e=>{ const d=document.createElement('div'); d.className='ritem';
+    d.innerHTML='<span class="em">'+e.em+'</span><div><div class="rb">'+e.d[lang]+' — '+e.t[lang]+'</div><div class="rf">'+e.f[lang]+'</div></div>';
+    rl.appendChild(d); });
+  $('#check').style.display='none';
+  $('#next').textContent = (rnd>=ROUNDS-1)?(lang==='hy'?'Արդյունք →':lang==='en'?'Result →':'Итог →'):T[lang].next;
+  $('#reveal').classList.add('show');
+  $('#reveal').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function nextRound(){ if(rnd>=ROUNDS-1){ endGame(); return; } rnd++; newRound(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function endGame(){
+  const max=ROUNDS*SIZE, best=Math.max(getBest(),score); setBest(best);
+  $('#ftot').textContent=score; $('#fmax').textContent=max; $('#fbest').textContent=best;
+  const r=score/max; $('#fem').textContent=r>=.85?'🏆':r>=.55?'🎖️':'⏳';
+  $('#fmsg').textContent=T[lang].msg[r>=.85?0:r>=.55?1:2];
+  $('#final').classList.add('show');
+}
+
+document.querySelectorAll('.langs button').forEach(b=>b.addEventListener('click',()=>{lang=b.getAttribute('data-l');setLangStore(lang);applyT();}));
+$('#start').addEventListener('click',startGame);
+$('#again').addEventListener('click',startGame);
+$('#check').addEventListener('click',doCheck);
+$('#next').addEventListener('click',nextRound);
+
+(function init(){ const s=getLang(),nl=(navigator.language||'ru').toLowerCase();
+  lang=(s==='hy'||s==='ru'||s==='en')?s:(nl.startsWith('hy')?'hy':nl.startsWith('en')?'en':'ru');
+  applyT(); $('#intro').classList.add('show');
+})();
+</script>
+</body>
+</html>
