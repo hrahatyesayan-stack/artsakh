@@ -64,31 +64,36 @@
   .sub { font-size:13px; letter-spacing:.25em; text-transform:uppercase; opacity:.6; }
   /* Уважение к настройке «меньше движения» (вестибулярная доступность) */
   @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;} }
+  #langs{position:fixed;right:14px;bottom:12px;z-index:9999;display:flex;gap:5px;}
+  #langs button{font-family:Georgia,serif;font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.22);padding:7px 9px;border-radius:16px;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:.15s;}
+  #langs button.on{color:#0b0e18;background:#f2c879;border-color:#f2c879;font-weight:700;}
+  #langs button:focus-visible{outline:2px solid #f2c879;outline-offset:2px;}
 </style>
 </head>
 <body>
 <a href="index.html" style="position:fixed;left:14px;bottom:12px;z-index:9999;font-family:Georgia,serif;font-size:13px;letter-spacing:.08em;color:rgba(255,255,255,.78);background:rgba(0,0,0,.4);padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.22);text-decoration:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);">← Արցախ</a>
+<div id="langs"><button data-l="hy">ՀԱՅ</button><button data-l="ru">РУС</button><button data-l="en">ENG</button></div>
 <canvas id="game"></canvas>
 
 <div id="hud">
-  <div><span class="label">Очки</span><b id="score">0</b></div>
-  <div style="text-align:center"><span class="label">Гранаты</span><b class="pom" id="poms">0</b></div>
-  <div style="text-align:right"><span class="label">Рекорд</span><b id="best">0</b></div>
+  <div><span class="label" data-t="score">Очки</span><b id="score">0</b></div>
+  <div style="text-align:center"><span class="label" data-t="poms">Гранаты</span><b class="pom" id="poms">0</b></div>
+  <div style="text-align:right"><span class="label" data-t="best">Рекорд</span><b id="best">0</b></div>
 </div>
 
 <div class="overlay" id="startScreen">
-  <div class="am">Արցախ · «край всадников»</div>
-  <h1>Всадник Арцаха</h1>
-  <div class="desc">Скачи по родным горам, перепрыгивай камни и собирай гранаты. Чем дальше — тем быстрее.</div>
-  <div class="cta">Нажми ПРОБЕЛ или тапни</div>
-  <div class="small">Пробел · ↑ · клик · тап — прыжок (двойной прыжок в воздухе)</div>
+  <div class="am" data-t="am">Արцախ · «край всадников»</div>
+  <h1 data-t="title">Всадник Арцаха</h1>
+  <div class="desc" data-t="desc">Скачи по родным горам, перепрыгивай камни и собирай гранаты. Чем дальше — тем быстрее.</div>
+  <div class="cta" data-t="cta">Нажми ПРОБЕЛ или тапни</div>
+  <div class="small" data-t="hint">Пробел · ↑ · клик · тап — прыжок (двойной прыжок в воздухе)</div>
 </div>
 
 <div class="overlay hidden" id="overScreen">
-  <div class="sub">Конец пути</div>
+  <div class="sub" data-t="overSub">Конец пути</div>
   <div class="score-big" id="finalScore">0</div>
   <div class="desc" id="finalLine">Хорошая скачка!</div>
-  <div class="cta">Скакать снова</div>
+  <div class="cta" data-t="restart">Скакать снова</div>
 </div>
 
 <script>
@@ -96,6 +101,32 @@
 const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
+
+/* ════════════ ЯЗЫК (3 языка) ════════════ */
+function getLang(){ try{const v=localStorage.getItem('artsakh_lang'); if(v==='hy'||v==='ru'||v==='en')return v;}catch(e){} const n=(navigator.language||'ru').toLowerCase(); return n.startsWith('hy')?'hy':n.startsWith('en')?'en':'ru'; }
+let lang=getLang();
+const UI={
+  ru:{ score:'Очки', poms:'Гранаты', best:'Рекорд', am:'Արցախ · «край всадников»', title:'Всадник Арцаха',
+    desc:'Скачи по родным горам, перепрыгивай камни и собирай гранаты. Чем дальше — тем быстрее.',
+    cta:'Нажми ПРОБЕЛ или тапни', hint:'Пробел · ↑ · клик · тап — прыжок (двойной прыжок в воздухе)',
+    overSub:'Конец пути', restart:'Скакать снова', record:'Новый рекорд! Մենք ենք մեր սարերը 🇦🇲', gemsPre:'Гранатов собрано: ', gemsPost:'. Ещё разок?' },
+  hy:{ score:'Միավոր', poms:'Նուռ', best:'Ռեկորդ', am:'Արցախ · «հեծյալների երկիր»', title:'Արցախի հեծյալը',
+    desc:'Սլացի՛ր հայրենի սարերով, ցատկի՛ր քարերի վրայով և հավաքի՛ր նռներ։ Որքան հեռու՝ այնքան արագ։',
+    cta:'Սեղմի՛ր ԲԱՑԱՏԸ կամ հպի՛ր', hint:'Բացատ · ↑ · սեղմում · հպում՝ ցատկ (կրկնակի ցատկ օդում)',
+    overSub:'Ճանապարհի վերջը', restart:'Սլանալ նորից', record:'Նոր ռեկորդ՛ Մենք ենք մեր սարերը 🇦🇲', gemsPre:'Հավաքված նուռ՝ ', gemsPost:'։ Եւս մեկ անգամ՞' },
+  en:{ score:'Score', poms:'Pomegranates', best:'Best', am:'Արցախ · “land of horsemen”', title:'Rider of Artsakh',
+    desc:'Gallop the native mountains, leap over the stones and collect pomegranates. The farther you go, the faster it gets.',
+    cta:'Press SPACE or tap', hint:'Space · ↑ · click · tap — jump (double-jump in the air)',
+    overSub:'End of the road', restart:'Ride again', record:'New record! Մենք ենք մեր սարերը 🇦🇲', gemsPre:'Pomegranates collected: ', gemsPost:'. Once more?' }
+};
+function tr(k){ return (UI[lang]&&UI[lang][k]!=null)?UI[lang][k]:UI.ru[k]; }
+function applyChrome(){
+  document.querySelectorAll('[data-t]').forEach(el=>{ const k=el.getAttribute('data-t'); if(UI[lang][k]!=null) el.textContent=UI[lang][k]; });
+  document.documentElement.lang=lang;
+  document.querySelectorAll('#langs button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lang));
+}
+document.querySelectorAll('#langs button').forEach(b=>b.addEventListener('click',ev=>{ ev.stopPropagation(); lang=b.getAttribute('data-l'); try{localStorage.setItem('artsakh_lang',lang);}catch(e){} applyChrome(); }));
+applyChrome();
 
 let W, H, s, groundY, skyGrad;
 
@@ -199,8 +230,8 @@ function gameOver(){
   if(record){ best=sc; saveBest(best); $('best').textContent=best; }
   $('finalScore').textContent=sc;
   $('finalLine').textContent = (record && sc>0)
-      ? 'Новый рекорд! Մենք ենք մեր սարերը 🇦🇲'
-      : 'Гранатов собрано: ' + poms + '. Ещё разок?';
+      ? tr('record')
+      : tr('gemsPre') + poms + tr('gemsPost');
   $('overScreen').classList.remove('hidden');
 }
 const scoreVal = () => Math.floor(scrollX/(38*s)) + poms*10;
