@@ -494,6 +494,11 @@ const IMG = {
   barkhudariants:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bishop_Makar_Barkhudaryants.jpg/1280px-Bishop_Makar_Barkhudaryants.jpg',
   raffi:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Raffi.jpg/1280px-Raffi.jpg',
   leo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Leo_%28Arakel_Babakhanyan%29.jpg/1280px-Leo_%28Arakel_Babakhanyan%29.jpg',
+  okhte_drni:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/%D4%B5%D5%AF%D5%A5%D5%B2%D5%A5%D6%81%D5%AB_%D5%95%D5%AD%D5%BF%D5%A8_%D5%A4%D5%BC%D5%B6%D5%AB%D6%89.jpg/1280px-%D4%B5%D5%AF%D5%A5%D5%B2%D5%A5%D6%81%D5%AB_%D5%95%D5%AD%D5%BF%D5%A8_%D5%A4%D5%BC%D5%B6%D5%AB%D6%89.jpg',
+  koshik_anapat:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/%C2%AB%D4%BF%D5%B8%D5%B7%D5%AB%D5%AF_%D5%A1%D5%B6%D5%A1%D5%BA%D5%A1%D5%BF%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg/1280px-%C2%AB%D4%BF%D5%B8%D5%B7%D5%AB%D5%AF_%D5%A1%D5%B6%D5%A1%D5%BA%D5%A1%D5%BF%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg',
+  spitak_khach:'https://upload.wikimedia.org/wikipedia/commons/0/00/Hadruth%2C_Spitak_Khach_%28White_Cross%29_church_-_panoramio.jpg',
+  bri_yeghtsi:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/%C2%AB%D4%B2%D5%BC%D5%AB_%D5%A5%D5%B2%D6%81%D5%AB%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg/1280px-%C2%AB%D4%B2%D5%BC%D5%AB_%D5%A5%D5%B2%D6%81%D5%AB%C2%BB_%D5%BE%D5%A1%D5%B6%D5%A1%D5%AF%D5%A1%D5%B6_%D5%B0%D5%A1%D5%B4%D5%A1%D5%AC%D5%AB%D6%80.jpg',
+  taraz:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/ArmenianGirlsErzurum.jpg/1280px-ArmenianGirlsErzurum.jpg',
 };
 // фото скачаны локально в img/ — ради постоянства (не зависят от ссылок Wikimedia);
 // SRC хранит исходные URL Wikimedia для подписей авторства.
@@ -623,6 +628,14 @@ const LANDMARKS = [
     d:{hy:'Ժայռի վրա կանգնած միջնադարյան անմատչելի ամրոց Խաչենում։',ru:'Средневековая неприступная крепость на скале в Хачене.',en:'A nearly impregnable medieval clifftop fortress in Khachen.'} },
   { img:IMG.jraberd, t:{hy:'Ջրաբերդ',ru:'Джраберд',en:'Jraberd'},
     d:{hy:'Միջնադարյան ամրոց Թարթառի ափին՝ Ատաբեկյանների մելիքության կենտրոն։',ru:'Средневековая крепость на реке Тертер — центр меликства Атабекянов.',en:'A medieval fortress on the Tartar river — seat of the Atabekian melikdom.'} },
+  { img:IMG.okhte_drni, t:{hy:'Օխտը դռնի',ru:'Охты Дрни',en:'Okhte Drni'},
+    d:{hy:'Վաղ միջնադարյան վանք (V–VI դդ.)՝ անտառապատ լեռան գագաթին, Հադրութում։',ru:'Раннесредневековый монастырь (V–VI вв.) на лесистой вершине, в Гадруте.',en:'An early-medieval monastery (5th–6th c.) on a forested summit, in Hadrut.'} },
+  { img:IMG.koshik_anapat, t:{hy:'Կոշիկ անապատ',ru:'Кошик (пустынь)',en:'Koshik Hermitage'},
+    d:{hy:'XII դարի վանական համալիր Կոլատակի մոտ՝ եկեղեցիներով և խաչքարերով։',ru:'Монашеский комплекс XII века близ Колатака — церкви и хачкары.',en:'A 12th-century monastic complex near Kolatak — churches and khachkars.'} },
+  { img:IMG.spitak_khach, t:{hy:'Սպիտակ խաչ',ru:'Спитак Хач (Белый крест)',en:'Spitak Khach (White Cross)'},
+    d:{hy:'Միջնադարյան «Սպիտակ խաչ» վանքը՝ Վանք գյուղի մոտ, Հադրութում։',ru:'Средневековый монастырь «Спитак Хач» («Белый крест») у села Ванк, Гадрут.',en:'The medieval “Spitak Khach” (White Cross) monastery near Vank village, Hadrut.'} },
+  { img:IMG.bri_yeghtsi, t:{hy:'Բռի եղցի',ru:'Бри Ехци',en:'Bri Yeghtsi'},
+    d:{hy:'Միջնադարյան եկեղեցի-հուշարձան բլրի վրա՝ Հացի գյուղում, Հադրութ։',ru:'Средневековый храм-памятник на холме в селе Хаци, Гадрут.',en:'A medieval hilltop church-monument in Hatsi village, Hadrut.'} },
 ];
 
 const CULTURE = [
@@ -652,6 +665,8 @@ const CULTURE = [
     d:{hy:'Տյառնընդառաջի կրակի տոնը. այս լուսանկարը՝ Դադիվանքում։',ru:'Праздник Трндез с прыжками через огонь; этот снимок — в Дадиванке.',en:'The Trndez fire feast; this photo was taken at Dadivank.'} },
   { img:IMG.tutovka, t:{hy:'Թթի օղի',ru:'Тутовка',en:'Mulberry vodka'},
     d:{hy:'Թթի օղին՝ Արցախի ավանդական թթենու թունդ թորվածքը։',ru:'Тутовка — традиционная для Карабаха крепкая тутовая водка.',en:'Tutovka — a strong mulberry spirit traditional to Karabakh.'} },
+  { img:IMG.taraz, t:{hy:'Տարազ',ru:'Тараз',en:'Taraz'},
+    d:{hy:'Հայկական ազգային տարազը՝ բրդից, մետաքսից և մորթուց։',ru:'Армянский национальный костюм — из шерсти, шёлка и меха.',en:'The Armenian national costume — of wool, silk and fur.'} },
 ];
 
 const FIGURES = [
