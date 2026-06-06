@@ -108,7 +108,7 @@ function setBest(v){try{localStorage.setItem('artsakh_guess_best',v);}catch(e){}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]];}return a;}
 function applyT(){document.querySelectorAll('[data-t]').forEach(el=>{const k=el.getAttribute('data-t');if(T[lang][k]!=null)el.textContent=T[lang][k];});document.documentElement.lang=lang;document.querySelectorAll('.langs button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lang));$('#tot').textContent=ROUNDS;if(cur)showRound(true);}
 function start(){rounds=shuffle(POOL).slice(0,ROUNDS);i=0;score=0;$('#scr').textContent=0;$('#intro').classList.remove('show');$('#final').classList.remove('show');showRound();}
-function showRound(keep){ if(!keep){answered=false;cur=rounds[i];} const ans=cur;
+function showRound(keep){ if(!keep){answered=false;cur=rounds[i];} const ans=cur; if(!ans)return;
   $('#rnd').textContent=i+1; $('#q').textContent = ans.sec==='figures'?T[lang].qWho:T[lang].qThing;
   const im=$('#pimg'); im.src=ans.img; im.onerror=()=>{im.style.opacity=0;}; im.style.opacity=1;
   const opts = keep ? curOpts : shuffle([ans, ...shuffle(POOL.filter(p=>p.img!==ans.img)).slice(0,3)]);
