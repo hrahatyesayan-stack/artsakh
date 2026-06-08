@@ -126,6 +126,7 @@
   .card:hover{transform:translateY(-5px);border-color:rgba(242,200,121,.3);box-shadow:0 24px 60px rgba(0,0,0,.5);}
   .card .ph{aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg,#1b2233,#0d1220);}
   .card .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1s ease;}
+  .card .ph.contain img{object-fit:contain;}
   .card:hover .ph img{transform:scale(1.07);}
   .card .body{padding:18px 20px 22px;}
   .card h3{font-size:21px;font-weight:500;margin-bottom:7px;}
@@ -527,6 +528,7 @@
 /* ── Фотографии (Wikimedia Commons) ── */
 const IMG = {
   gandzasar:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/DJI_-Gandzasar.jpg/3840px-DJI_-Gandzasar.jpg',
+  flag:       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Flag_of_Artsakh.svg/1280px-Flag_of_Artsakh.svg.png',
   tatik:      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/We_Are_Our_Mountains_-_2017_-_0.JPG/3840px-We_Are_Our_Mountains_-_2017_-_0.JPG',
   dadivank:   'https://upload.wikimedia.org/wikipedia/commons/b/b7/Kl%C3%A1%C5%A1tern%C3%AD_komplex_Dadivank_-_panoramio.jpg',
   amaras:     'https://upload.wikimedia.org/wikipedia/commons/c/c0/Amaras_Russian_peacekeepers_2021.jpg',
@@ -760,6 +762,8 @@ const LANDMARKS = [
 ];
 
 const CULTURE = [
+  { img:IMG.flag, fit:'contain', t:{hy:'Արցախի դրոշը',ru:'Флаг Арцаха',en:'Flag of Artsakh'},
+    d:{hy:'Հայկական եռագույնը՝ սպիտակ գորգային նախշով։ Նախշը խորհրդանշում է գորգագործության ավանդույթը և Արցախի՝ Հայաստանի հետ վերամիավորվելու ձգտումը։',ru:'Армянский триколор с белым «ковровым» узором. Узор символизирует традицию ковроткачества и стремление Арцаха к воссоединению с Арменией.',en:'The Armenian tricolour with a white carpet-pattern. The pattern symbolises the carpet-weaving tradition and Artsakh’s aspiration to reunite with Armenia.'} },
   { img:IMG.khachkar, t:{hy:'Խաչքար',ru:'Хачкар',en:'Khachkar'},
     d:{hy:'Հայկական խաչ-քարը՝ ՅՈՒՆԵՍԿՕ-ի ժառանգության մեջ։',ru:'Армянский крест-камень — в наследии ЮНЕСКО.',en:'The Armenian cross-stone, on the UNESCO heritage list.'} },
   { img:IMG.duduk, t:{hy:'Դուդուկ',ru:'Дудук',en:'Duduk'},
@@ -906,7 +910,7 @@ function render(lang){
     </div>`).join('');
 
   // сетки
-  const cardHtml = it=>`<div class="card"><div class="ph">${imgTag(it.img, it.t[lang])}</div><div class="body"><h3>${it.t[lang]}</h3><p>${it.d[lang]}</p></div></div>`;
+  const cardHtml = it=>`<div class="card"><div class="ph${it.fit?' '+it.fit:''}">${imgTag(it.img, it.t[lang])}</div><div class="body"><h3>${it.t[lang]}</h3><p>${it.d[lang]}</p></div></div>`;
   $('#landmarks').innerHTML = LANDMARKS.map(cardHtml).join('');
   $('#culture-grid').innerHTML = CULTURE.map(cardHtml).join('');
   $('#figures-grid').innerHTML = FIGURES.map(cardHtml).join('');
