@@ -169,6 +169,7 @@
   .candle:focus-visible,.candle-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;}
   .candle-msg{color:var(--gold2);font-size:clamp(15px,2vw,18px);line-height:1.5;max-width:540px;margin:0 auto;opacity:0;transition:opacity 1.1s ease;}
   .candle-msg.show{opacity:1;}
+  .candle-msg:focus{outline:none;}
   .candle.lit{cursor:default;}
 
   footer{border-top:1px solid rgba(255,255,255,.07);padding:40px 0;text-align:center;color:var(--muted);font-size:13px;background:#090b13;}
@@ -483,7 +484,7 @@
     <div class="candle-wrap">
       <div class="candle" id="candle"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="body"></div></div>
       <button class="candle-btn" id="candleBtn" data-i18n="candle_prompt">Зажги свечу в память об Арцахе</button>
-      <p class="candle-msg" id="candleMsg" data-i18n="candle_lit">Свеча горит — в память об Арцахе, его монастырях и его людях.</p>
+      <p class="candle-msg" id="candleMsg" data-i18n="candle_lit" tabindex="-1" role="status">Свеча горит — в память об Арцахе, его монастырях и его людях.</p>
     </div>
   </div>
 </section>
@@ -1097,7 +1098,7 @@ document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',(
   function light(save){
     candle.classList.add('lit');
     if(btn) btn.style.display='none';
-    if(msg) msg.classList.add('show');
+    if(msg){ msg.classList.add('show'); if(save) try{ msg.focus(); }catch(e){} }
     if(save){ try{ localStorage.setItem('artsakh_candle','1'); }catch(e){} }
   }
   candle.addEventListener('click',()=>light(true));
