@@ -151,6 +151,24 @@
   .mfacts{max-width:640px;margin:24px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:11px;}
   .mfacts div{color:var(--muted);font-size:clamp(15px,2vw,18px);line-height:1.55;}
   .mfacts div:last-child{color:var(--gold2);}
+  /* Свеча памяти — зажги в память об Арцахе */
+  .candle-wrap{margin:40px auto 0;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .candle{position:relative;width:60px;height:128px;cursor:pointer;outline:none;}
+  .candle .glow{position:absolute;left:50%;top:-32px;width:150px;height:150px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,184,92,.5),rgba(255,150,60,.12) 46%,transparent 70%);opacity:0;transition:opacity 1s ease;pointer-events:none;}
+  .candle .flame{position:absolute;left:50%;top:-2px;width:16px;height:34px;transform:translateX(-50%) scaleY(0);transform-origin:50% 100%;border-radius:50% 50% 50% 50% / 62% 62% 40% 40%;background:linear-gradient(180deg,#fff7e0,#ffd86b 32%,#ff9b2f 70%,#e8631f);box-shadow:0 0 20px 6px rgba(255,160,60,.5);transition:transform .6s ease;}
+  .candle .wick{position:absolute;left:50%;top:22px;width:3px;height:11px;transform:translateX(-50%);background:#2a211a;border-radius:2px;}
+  .candle .body{position:absolute;left:50%;bottom:0;width:30px;height:102px;transform:translateX(-50%);background:linear-gradient(90deg,#c9bb9d,#f4eddb 32%,#fff 50%,#efe6cf 68%,#c4b698);border-radius:7px 7px 4px 4px;}
+  .candle .body::before{content:"";position:absolute;left:50%;top:-4px;width:30px;height:8px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 45%,#fff 28%,#ddd0b4);border-radius:50%;}
+  .candle.lit .flame{transform:translateX(-50%) scaleY(1);animation:flicker 2.4s ease-in-out infinite;}
+  .candle.lit .glow{opacity:1;animation:glowpulse 2.8s ease-in-out infinite;}
+  @keyframes flicker{0%,100%{transform:translateX(-50%) scale(1,1) rotate(-1.5deg);}25%{transform:translateX(-51%) scale(1.05,1.08) rotate(1deg);}50%{transform:translateX(-49%) scale(.97,1.05) rotate(-1deg);}75%{transform:translateX(-50%) scale(1.03,1.06) rotate(1.5deg);}}
+  @keyframes glowpulse{0%,100%{opacity:.72;}50%{opacity:1;}}
+  .candle-btn{font-family:var(--serif);font-size:14px;letter-spacing:.05em;color:var(--gold2);background:transparent;border:1px solid rgba(242,200,121,.5);padding:9px 22px;border-radius:30px;cursor:pointer;transition:.2s;}
+  .candle-btn:hover{background:rgba(242,200,121,.12);}
+  .candle:focus-visible,.candle-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;}
+  .candle-msg{color:var(--gold2);font-size:clamp(15px,2vw,18px);line-height:1.5;max-width:540px;margin:0 auto;opacity:0;transition:opacity 1.1s ease;}
+  .candle-msg.show{opacity:1;}
+  .candle.lit{cursor:default;}
 
   footer{border-top:1px solid rgba(255,255,255,.07);padding:40px 0;text-align:center;color:var(--muted);font-size:13px;background:#090b13;}
   footer a{color:var(--gold);} footer .credit{margin-top:8px;font-size:12px;opacity:.7;}
@@ -238,7 +256,7 @@
   }
   /* Печать: чистый документ без интерфейса (Cmd/Ctrl+P → сохранить как PDF) */
   @media print {
-    .flagbar, nav, #toTop, #progress, #lightbox, #searchOverlay, #memory .stars, .scrollcue, #map, #play, #printBtn, #installBtn, #shareBtn { display:none !important; }
+    .flagbar, nav, #toTop, #progress, #lightbox, #searchOverlay, #memory .stars, .scrollcue, #map, #play, #printBtn, #installBtn, #shareBtn, .candle-wrap { display:none !important; }
     html, body { background:#fff !important; color:#111 !important; }
     .reveal { opacity:1 !important; transform:none !important; }
     section { padding:14px 0 !important; break-inside:avoid; }
@@ -461,6 +479,11 @@
     <div class="phrase" lang="hy">Մենք ենք մեր սարերը</div>
     <p class="mtext" data-i18n="memory_text">Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.</p>
     <div class="mfacts" id="memfacts"></div>
+    <div class="candle-wrap">
+      <div class="candle" id="candle"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="body"></div></div>
+      <button class="candle-btn" id="candleBtn" data-i18n="candle_prompt">Зажги свечу в память об Арцахе</button>
+      <p class="candle-msg" id="candleMsg" data-i18n="candle_lit">Свеча горит — в память об Арцахе, его монастырях и его людях.</p>
+    </div>
   </div>
 </section>
 
@@ -602,7 +625,7 @@ const T = {
     play_quiz_t:'Վիկտորինա ըստ դարաշրջանների', play_quiz_d:'7 դարաշրջան, հարցեր ու փաստեր, 3 կյանք և ռեկորդ։',
     play_runner_t:'Արցախի հեծյալը', play_runner_d:'Արկադ. սլացիր սարերով և հավաքիր նռներ։',
     play_story_t:'Դարերի միջով', play_story_d:'Մթնոլորտային ճանապարհորդություն Արցախի դարաշրջաններով։', play_map_t:'Որտե՞ղ է. Արցախի քարտեզը', play_map_d:'Գտի՛ր սրբավայրերն ու քաղաքները իրական քարտեզի վրա և սովորի՛ր Արցախը։', play_mem_t:'Գտի՛ր զույգը', play_mem_d:'Հիշողության խաղ. զուգի՛ր սրբավայրի լուսանկարն ու անունը։', play_time_t:'Ժամանակի գիծ', play_time_d:'Դասավորի՛ր Արցախի իրադարձությունները ըստ ժամանակի և սովորի՛ր պատմությունը։', play_learn_t:'Սովորիր Արցախը', play_learn_d:'Թերթի՛ր սրբավայրերի ու անձանց քարտերը, շրջի՛ր և կարդա՛ փաստերը։', play_learn_go:'Սովորել →', play_guess_t:'Ի՞նչ է սա', play_guess_d:'Ճանաչի՛ր Արցախի սրբավայրը կամ անձը լուսանկարով։', play_go:'Խաղալ →',
-    memory_eyebrow:'Հավերժ', memory_text:'Այս կայքը նվիրված է Արցախին՝ նրա վանքերին, մարդկանց և հազարամյա պատմությանը։ Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։',
+    memory_eyebrow:'Հավերժ', memory_text:'Այս կայքը նվիրված է Արցախին՝ նրա վանքերին, մարդկանց և հազարամյա պատմությանը։ Արցախն ապրում է, քանի դեռ հնչում է նրա անունը։', candle_prompt:'Վառի՛ր մոմ Արցախի հիշատակին', candle_lit:'Մոմը վառվում է՝ Արցախի, նրա վանքերի և մարդկանց հիշատակին։',
     nav_map:'Քարտեզ', map_eyebrow:'Քարտեզի վրա', map_h:'Արցախի ատլաս', map_lead:'Սեղմի՛ր նշանին՝ վայրի մասին իմանալու համար։',
     nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։', towns_eyebrow:'Հողն ու մարդիկ', towns_h:'Քաղաքներ ու գյուղեր', towns_lead:'Քաղաքներ ու գյուղեր, որտեղ բաբախում է Արցախի սիրտը։',
     footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը', footer_share:'🔗 Կիսվել' },
@@ -615,7 +638,7 @@ const T = {
     play_quiz_t:'Викторина по эпохам', play_quiz_d:'7 эпох, вопросы и факты, 3 жизни и рекорд.',
     play_runner_t:'Всадник Арцаха', play_runner_d:'Аркада: скачи по горам и собирай гранаты.',
     play_story_t:'Сквозь века', play_story_d:'Атмосферное путешествие по эпохам Арцаха.', play_map_t:'Где это? Карта Арцаха', play_map_d:'Найди святыни и города на настоящей карте — и запомни Арцах.', play_mem_t:'Найди пару', play_mem_d:'Мемори: соедини фото святыни с названием и узнай факт.', play_time_t:'Лента времени', play_time_d:'Расставь события Арцаха по порядку — и узнай даты.', play_learn_t:'Учи Арцах · Карточки', play_learn_d:'Листай карточки святынь и личностей, переворачивай и читай факты.', play_learn_go:'Учить →', play_guess_t:'Что это?', play_guess_d:'Узнай святыню или личность Арцаха по фото.', play_go:'Играть →',
-    memory_eyebrow:'Навсегда', memory_text:'Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.',
+    memory_eyebrow:'Навсегда', memory_text:'Этот сайт — дань уважения Арцаху: его монастырям, людям и тысячелетней истории. Арцах жив, пока звучит его имя.', candle_prompt:'Зажги свечу в память об Арцахе', candle_lit:'Свеча горит — в память об Арцахе, его монастырях и его людях.',
     nav_map:'Карта', map_eyebrow:'На карте', map_h:'Атлас Арцаха', map_lead:'Нажми на метку, чтобы узнать о месте.',
     nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.', towns_eyebrow:'Земля и люди', towns_h:'Города и сёла', towns_lead:'Города и сёла, где бьётся сердце Арцаха.',
     footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение', footer_share:'🔗 Поделиться' },
@@ -628,7 +651,7 @@ const T = {
     play_quiz_t:'Quiz through the eras', play_quiz_d:'7 eras, questions and facts, 3 lives and a high score.',
     play_runner_t:'Rider of Artsakh', play_runner_d:'Arcade: gallop the mountains and collect pomegranates.',
     play_story_t:'Through the ages', play_story_d:'An atmospheric journey through the eras of Artsakh.', play_map_t:'Where is it? Map of Artsakh', play_map_d:'Find the sacred sites and towns on the real map — and learn Artsakh.', play_mem_t:'Find the pair', play_mem_d:'Memory game: match a site’s photo to its name and learn a fact.', play_time_t:'Timeline', play_time_d:'Put Artsakh’s events in order — and learn the dates.', play_learn_t:'Learn Artsakh · Cards', play_learn_d:'Flip through cards of sites and figures and read the facts.', play_learn_go:'Learn →', play_guess_t:'What is it?', play_guess_d:'Recognise a site or figure of Artsakh from a photo.', play_go:'Play →',
-    memory_eyebrow:'Forever', memory_text:'This site is a tribute to Artsakh — its monasteries, its people and its millennia of history. Artsakh lives as long as its name is spoken.',
+    memory_eyebrow:'Forever', memory_text:'This site is a tribute to Artsakh — its monasteries, its people and its millennia of history. Artsakh lives as long as its name is spoken.', candle_prompt:'Light a candle in memory of Artsakh', candle_lit:'A candle burns — in memory of Artsakh, its monasteries and its people.',
     nav_map:'Map', map_eyebrow:'On the map', map_h:'Atlas of Artsakh', map_lead:'Tap a marker to learn about the place.',
     nav_figures:'Figures', figures_eyebrow:'Faces of history', figures_h:'Figures', figures_lead:'Those who shaped the history of Artsakh.', dyk_eyebrow:'Did you know?', nature_eyebrow:'Gems of nature', nature_h:'Nature', nature_lead:'The canyons, waters and ancient trees of Artsakh.', towns_eyebrow:'Land and people', towns_h:'Towns & villages', towns_lead:'Towns and villages where the heart of Artsakh beats.',
     footer_made:'Made with love for Artsakh 🇦🇲', footer_credit:'Photographs — Wikimedia Commons (free licenses).', footer_sources:'Photo sources:', footer_print:'Print / PDF', footer_install:'📲 Install app', footer_share:'🔗 Share' },
@@ -1059,6 +1082,21 @@ $('#soundBtn').addEventListener('click', toggleSound);
 const navEl=document.querySelector('nav');
 $('#burger').addEventListener('click',()=>navEl.classList.toggle('open'));
 document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',()=>navEl.classList.remove('open')));
+
+/* Свеча памяти: зажги в память об Арцахе (тихо, без счётчиков — личный жест) */
+(function(){
+  const candle=$('#candle'), btn=$('#candleBtn'), msg=$('#candleMsg');
+  if(!candle) return;
+  function light(save){
+    candle.classList.add('lit');
+    if(btn) btn.style.display='none';
+    if(msg) msg.classList.add('show');
+    if(save){ try{ localStorage.setItem('artsakh_candle','1'); }catch(e){} }
+  }
+  candle.addEventListener('click',()=>light(true));
+  if(btn) btn.addEventListener('click',()=>light(true));
+  try{ if(localStorage.getItem('artsakh_candle')==='1') light(false); }catch(e){}
+})();
 
 /* лайтбокс с галереей: клик по фото открывает его во весь экран, со стрелками */
 const lb=$('#lightbox'), lbImg=$('#lbImg'), lbCap=$('#lbCap'), lbCount=$('#lbCount');
