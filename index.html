@@ -290,7 +290,7 @@
 
 <nav>
   <a href="#hero" class="brand" lang="hy">Արցախ</a>
-  <button class="burger" id="burger" aria-label="Меню">☰</button>
+  <button class="burger" id="burger" aria-label="Меню" data-i18n-aria="aria_menu">☰</button>
   <div class="navlinks">
     <a href="#history" data-i18n="nav_history">История</a>
     <a href="#holy" data-i18n="nav_holy">Святыни</a>
@@ -300,8 +300,8 @@
     <a href="#play" data-i18n="nav_play">Игры</a>
     <a href="#memory" data-i18n="nav_memory">Память</a>
   </div>
-  <button id="searchBtn" class="soundbtn" aria-label="Поиск / Search" title="Поиск / Search / Որոնում">🔍</button>
-  <button id="soundBtn" class="soundbtn" aria-label="Звук / Sound" title="Звук / Sound / Ձայն">🔈</button>
+  <button id="searchBtn" class="soundbtn" aria-label="Поиск / Search" data-i18n-aria="aria_search" title="Поиск / Search / Որոնում">🔍</button>
+  <button id="soundBtn" class="soundbtn" aria-label="Звук / Sound" data-i18n-aria="aria_sound" title="Звук / Sound / Ձայն">🔈</button>
   <div class="langs">
     <button data-lang="hy">ՀԱՅ</button>
     <button data-lang="ru">РУС</button>
@@ -505,7 +505,7 @@
 
 <div id="lightbox"><span class="x">×</span><span class="nav prev" id="lbPrev">‹</span><img id="lbImg" alt="" /><span class="nav next" id="lbNext">›</span><div class="cap" id="lbCap"></div><div class="count" id="lbCount"></div><a class="lbsrc" id="lbSrc" target="_blank" rel="noopener">Wikimedia ↗</a></div>
 
-<div id="searchOverlay"><span class="sclose" id="sClose">×</span><div class="sbox"><input id="searchInput" placeholder="Поиск по Арцаху…" /><div id="searchResults"></div></div></div>
+<div id="searchOverlay"><span class="sclose" id="sClose">×</span><div class="sbox"><input id="searchInput" placeholder="Поиск по Арцаху…" data-i18n-ph="search_ph" aria-label="Поиск по Арцаху…" data-i18n-aria="search_ph" /><div id="searchResults"></div></div></div>
 
 <div id="place">
   <span class="pclose" id="placeClose">×</span>
@@ -521,7 +521,7 @@
   </div>
 </div>
 
-<button id="toTop" aria-label="Наверх">↑</button>
+<button id="toTop" aria-label="Наверх" data-i18n-aria="aria_top">↑</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -620,7 +620,7 @@ Object.keys(IMG).forEach(k=>{
 
 /* ── Тексты интерфейса (3 языка) ── */
 const T = {
-  hy:{ skip:'Անցնել բովանդակությանը', nav_history:'Պատմություն', nav_holy:'Սրբավայրեր', nav_culture:'Մշակույթ', nav_play:'Խաղեր', nav_memory:'Հիշողություն',
+  hy:{ skip:'Անցնել բովանդակությանը', nav_history:'Պատմություն', nav_holy:'Սրբավայրեր', nav_culture:'Մշակույթ', nav_play:'Խաղեր', nav_memory:'Հիշողություն', aria_menu:'Ընտրացանկ', aria_search:'Որոնում', aria_sound:'Ձայն', aria_top:'Վեր', search_ph:'Որոնել Արցախում…',
     hero_tag:'Քարի մեջ փորագրված, սրտում պահված երկիր', hero_sub:'Պատմություն · Սրբավայրեր · Մշակույթ · Հիշողություն', hero_cta:'Խաղալ վիկտորինան', hero_cta2:'Որտե՞ղ է. Քարտեզ',
     history_eyebrow:'2700 տարի', history_h:'Արցախի պատմությունը', history_lead:'Քարին փորագրված առաջին անունից մինչև մեր օրերը՝ մեկ հողի յոթ դարաշրջան։',
     holy_eyebrow:'Քար և հավատ', holy_h:'Սրբավայրեր', holy_lead:'Վանքեր, ամրոցներ և քաղաքներ, որ դարեր շարունակ պահել են Արցախի ոգին։',
@@ -633,7 +633,7 @@ const T = {
     nav_map:'Քարտեզ', map_eyebrow:'Քարտեզի վրա', map_h:'Արցախի ատլաս', map_lead:'Սեղմի՛ր նշանին՝ վայրի մասին իմանալու համար։',
     nav_figures:'Անձինք', figures_eyebrow:'Պատմության դեմքերը', figures_h:'Անձինք', figures_lead:'Նրանք, ովքեր կերտել են Արցախի պատմությունը։', dyk_eyebrow:'Գիտե՞ք արդյոք', nature_eyebrow:'Բնության գոհարներ', nature_h:'Բնություն', nature_lead:'Արցախի կիրճերը, ջրերն ու հնագույն ծառերը։', towns_eyebrow:'Հողն ու մարդիկ', towns_h:'Քաղաքներ ու գյուղեր', towns_lead:'Քաղաքներ ու գյուղեր, որտեղ բաբախում է Արցախի սիրտը։',
     footer_made:'Սիրով նվիրված Արցախին 🇦🇲', footer_credit:'Լուսանկարները՝ Wikimedia Commons (ազատ արտոնագրեր)։', footer_sources:'Լուսանկարների աղբյուրները՝', footer_print:'Տպել / PDF', footer_install:'📲 Տեղադրել հավելվածը', footer_share:'🔗 Կիսվել' },
-  ru:{ skip:'Перейти к содержанию', nav_history:'История', nav_holy:'Святыни', nav_culture:'Культура', nav_play:'Игры', nav_memory:'Память',
+  ru:{ skip:'Перейти к содержанию', nav_history:'История', nav_holy:'Святыни', nav_culture:'Культура', nav_play:'Игры', nav_memory:'Память', aria_menu:'Меню', aria_search:'Поиск', aria_sound:'Звук', aria_top:'Наверх', search_ph:'Поиск по Арцаху…',
     hero_tag:'Земля, высеченная в камне и хранимая в сердце', hero_sub:'История · Святыни · Культура · Память', hero_cta:'Играть в викторину', hero_cta2:'Где это? Карта',
     history_eyebrow:'2700 лет', history_h:'История Арцаха', history_lead:'От первого имени, высеченного в камне, до наших дней — семь эпох одной земли.',
     holy_eyebrow:'Камень и вера', holy_h:'Святыни', holy_lead:'Монастыри, крепости и города, что веками хранили дух Арцаха.',
@@ -646,7 +646,7 @@ const T = {
     nav_map:'Карта', map_eyebrow:'На карте', map_h:'Атлас Арцаха', map_lead:'Нажми на метку, чтобы узнать о месте.',
     nav_figures:'Личности', figures_eyebrow:'Лица истории', figures_h:'Личности', figures_lead:'Те, кто творил историю Арцаха.', dyk_eyebrow:'Знаете ли вы?', nature_eyebrow:'Жемчужины природы', nature_h:'Природа', nature_lead:'Каньоны, воды и древние деревья Арцаха.', towns_eyebrow:'Земля и люди', towns_h:'Города и сёла', towns_lead:'Города и сёла, где бьётся сердце Арцаха.',
     footer_made:'Сделано с любовью к Арцаху 🇦🇲', footer_credit:'Фотографии — Wikimedia Commons (свободные лицензии).', footer_sources:'Источники фото:', footer_print:'Печать / PDF', footer_install:'📲 Установить приложение', footer_share:'🔗 Поделиться' },
-  en:{ skip:'Skip to content', nav_history:'History', nav_holy:'Sacred sites', nav_culture:'Culture', nav_play:'Games', nav_memory:'Memory',
+  en:{ skip:'Skip to content', nav_history:'History', nav_holy:'Sacred sites', nav_culture:'Culture', nav_play:'Games', nav_memory:'Memory', aria_menu:'Menu', aria_search:'Search', aria_sound:'Sound', aria_top:'To top', search_ph:'Search Artsakh…',
     hero_tag:'A land carved in stone, kept in the heart', hero_sub:'History · Sacred sites · Culture · Memory', hero_cta:'Play the quiz', hero_cta2:'Where is it? Map',
     history_eyebrow:'2700 years', history_h:'History of Artsakh', history_lead:'From the first name carved in stone to our own day — seven eras of one land.',
     holy_eyebrow:'Stone and faith', holy_h:'Sacred sites', holy_lead:'Monasteries, fortresses and cities that kept the spirit of Artsakh for centuries.',
@@ -899,6 +899,8 @@ function imgTag(src,alt){ return '<img loading="lazy" decoding="async" referrerp
 function render(lang){
   // интерфейс
   document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(T[lang][k]!=null) el.textContent=T[lang][k]; });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{ const k=el.getAttribute('data-i18n-aria'); if(T[lang][k]!=null) el.setAttribute('aria-label',T[lang][k]); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ const k=el.getAttribute('data-i18n-ph'); if(T[lang][k]!=null) el.setAttribute('placeholder',T[lang][k]); });
   document.documentElement.lang = lang;
   document.querySelectorAll('.langs button').forEach(b=>{ const on=b.dataset.lang===lang; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
 
