@@ -529,6 +529,7 @@
 const IMG = {
   gandzasar:  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/DJI_-Gandzasar.jpg/3840px-DJI_-Gandzasar.jpg',
   flag:       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Flag_of_Artsakh.svg/1280px-Flag_of_Artsakh.svg.png',
+  coat:       'https://upload.wikimedia.org/wikipedia/commons/0/08/Emblem_of_the_Republic_of_Artsakh.svg',
   tatik:      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/We_Are_Our_Mountains_-_2017_-_0.JPG/3840px-We_Are_Our_Mountains_-_2017_-_0.JPG',
   dadivank:   'https://upload.wikimedia.org/wikipedia/commons/b/b7/Kl%C3%A1%C5%A1tern%C3%AD_komplex_Dadivank_-_panoramio.jpg',
   amaras:     'https://upload.wikimedia.org/wikipedia/commons/c/c0/Amaras_Russian_peacekeepers_2021.jpg',
@@ -610,7 +611,7 @@ const IMG = {
 const SRC = {};
 Object.keys(IMG).forEach(k=>{
   const u = IMG[k].toLowerCase();
-  const ext = u.endsWith('.jpeg') ? 'jpeg' : (u.endsWith('.png') ? 'png' : 'jpg');
+  const ext = u.endsWith('.svg') ? 'svg' : (u.endsWith('.jpeg') ? 'jpeg' : (u.endsWith('.png') ? 'png' : 'jpg'));
   const local = 'img/' + k + '.' + ext;
   SRC[local] = IMG[k];
   IMG[k] = local;
@@ -764,6 +765,8 @@ const LANDMARKS = [
 const CULTURE = [
   { img:IMG.flag, fit:'contain', t:{hy:'Արցախի դրոշը',ru:'Флаг Арцаха',en:'Flag of Artsakh'},
     d:{hy:'Հայկական եռագույնը՝ սպիտակ գորգային նախշով։ Նախշը խորհրդանշում է գորգագործության ավանդույթը և Արցախի՝ Հայաստանի հետ վերամիավորվելու ձգտումը։',ru:'Армянский триколор с белым «ковровым» узором. Узор символизирует традицию ковроткачества и стремление Арцаха к воссоединению с Арменией.',en:'The Armenian tricolour with a white carpet-pattern. The pattern symbolises the carpet-weaving tradition and Artsakh’s aspiration to reunite with Armenia.'} },
+  { img:IMG.coat, fit:'contain', t:{hy:'Արցախի զինանշանը',ru:'Герб Арцаха',en:'Coat of arms of Artsakh'},
+    d:{hy:'Արծիվ՝ կրծքին վահան «Մենք ենք մեր սարերը» հուշարձանով և եռագույնով, վերևում՝ թագ, շուրջը՝ ցորենի հասկեր. Արցախի պետականության խորհրդանիշը։',ru:'Орёл со щитом на груди: монумент «Мы — наши горы» и триколор, сверху корона, вокруг колосья. Символ государственности Арцаха.',en:'An eagle with a breast-shield: the “We Are Our Mountains” monument and the tricolour, a crown above, wheat ears around — the emblem of Artsakh’s statehood.'} },
   { img:IMG.khachkar, t:{hy:'Խաչքար',ru:'Хачкар',en:'Khachkar'},
     d:{hy:'Հայկական խաչ-քարը՝ ՅՈՒՆԵՍԿՕ-ի ժառանգության մեջ։',ru:'Армянский крест-камень — в наследии ЮНЕСКО.',en:'The Armenian cross-stone, on the UNESCO heritage list.'} },
   { img:IMG.duduk, t:{hy:'Դուդուկ',ru:'Дудук',en:'Duduk'},
