@@ -1031,13 +1031,14 @@ function initMap(lang){
   });
 }
 function openPlace(i){
+  if(!$('#place').classList.contains('open')) lastFocus=document.activeElement;
   placeIdx=(i+ATLAS.length)%ATLAS.length; const p=ATLAS[placeIdx];
   const img=$('#placeImg'); img.setAttribute('src', IMG[p.key]); img.setAttribute('alt', p.t[curLang]||'');
   $('#placeTitle').textContent=p.t[curLang]; $('#placeEra').textContent=p.era[curLang]; $('#placeDesc').textContent=p.d[curLang];
   const sp=filePage(IMG[p.key]), sa=$('#placeSrc'); if(sp){ sa.href=sp; sa.style.display='inline-block'; } else { sa.style.display='none'; }
   $('#place').classList.add('open');
 }
-function closePlace(){ $('#place').classList.remove('open'); }
+function closePlace(){ $('#place').classList.remove('open'); restoreFocus(); }
 
 /* ── фоновый звук: тихий дрон + неспешная мелодия в духе дудука (выкл. по умолчанию) ── */
 let sctx=null, sMaster=null, soundOn=false, leadOsc=null, leadGain=null, noteTimer=null;
@@ -1117,8 +1118,10 @@ function lbShow(){ lbImg.src=lbList[lbIdx]||''; const multi=lbList.length>1;
   $('#lbPrev').style.display = multi?'block':'none'; $('#lbNext').style.display = multi?'block':'none';
   const sp=filePage(lbList[lbIdx]||''), sa=$('#lbSrc'); if(sa){ if(sp){ sa.href=sp; sa.style.display='inline-block'; } else { sa.style.display='none'; } } }
 function lbStep(d){ if(lbList.length<2) return; lbIdx=(lbIdx+d+lbList.length)%lbList.length; lbShow(); }
-function closeLB(){ lb.classList.remove('open'); lbImg.src=''; lbList=[]; }
-function openLB(src,cap){ lbList=(GALLERY[src]&&GALLERY[src].length)?GALLERY[src]:[src]; lbIdx=Math.max(0,lbList.indexOf(src)); lbCap.textContent=cap||''; lbShow(); lb.classList.add('open'); }
+let lastFocus=null;
+function restoreFocus(){ if(lastFocus&&lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} } lastFocus=null; }
+function closeLB(){ lb.classList.remove('open'); lbImg.src=''; lbList=[]; restoreFocus(); }
+function openLB(src,cap){ if(!lb.classList.contains('open')) lastFocus=document.activeElement; lbList=(GALLERY[src]&&GALLERY[src].length)?GALLERY[src]:[src]; lbIdx=Math.max(0,lbList.indexOf(src)); lbCap.textContent=cap||''; lbShow(); lb.classList.add('open'); }
 lb.addEventListener('click', e=>{
   if(e.target.id==='lbPrev'){ e.stopPropagation(); lbStep(-1); }
   else if(e.target.id==='lbNext'){ e.stopPropagation(); lbStep(1); }
@@ -1220,8 +1223,8 @@ function renderSearch(q){
   sRes.innerHTML = m.length ? m.map(x=>`<div class="sres" data-sec="${x.sec}"><span class="st">${x.t[curLang]}</span><span class="ss">${T[curLang][SECLABEL[x.sec]]}</span></div>`).join('')
                             : `<div class="sres" style="opacity:.5;cursor:default">—</div>`;
 }
-function openSearch(){ sIn.placeholder = curLang==='hy'?'Որոնում Արցախում…':curLang==='en'?'Search Artsakh…':'Поиск по Арцаху…'; sOv.classList.add('open'); sIn.value=''; renderSearch(''); setTimeout(()=>sIn.focus(),50); }
-function closeSearch(){ sOv.classList.remove('open'); }
+function openSearch(){ if(!sOv.classList.contains('open')) lastFocus=document.activeElement; sIn.placeholder = curLang==='hy'?'Որոնում Արցախում…':curLang==='en'?'Search Artsakh…':'Поиск по Арцаху…'; sOv.classList.add('open'); sIn.value=''; renderSearch(''); setTimeout(()=>sIn.focus(),50); }
+function closeSearch(){ sOv.classList.remove('open'); restoreFocus(); }
 sIn.addEventListener('input', e=>renderSearch(e.target.value));
 sRes.addEventListener('click', e=>{ const r=e.target.closest('.sres'); if(!r||!r.dataset.sec) return; closeSearch(); document.getElementById(r.dataset.sec).scrollIntoView({behavior:'smooth'}); });
 $('#searchBtn').addEventListener('click', openSearch);
